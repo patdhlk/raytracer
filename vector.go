@@ -17,11 +17,11 @@ func NewVector(x, y, z int32) *vector {
 	return v
 }
 
-func (v *vector) Multiply(a, b vector) int32 {
+func Multiply(a, b vector) int32 {
 	return a.X*b.X + a.Y*b.Y + a.Z*b.Z
 }
 
-func (v *vector) Subtract(a, b vector) vector {
+func Subtract(a, b vector) vector {
 	var result vector
 	result.X = a.X - b.X
 	result.Y = a.Y - b.Y
