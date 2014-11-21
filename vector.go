@@ -1,44 +1,66 @@
 package raytracer
 
-//representing a point in the room
-type vector struct {
-	X, Y, Z float64
+import "math"
+
+type Vector struct {
+	x, y, z float64
 }
 
-//constructor
-//see: https://golang.org/doc/effective_go.html#composite_literals
-func NewVector(x, y, z float64) *vector {
-	v := new(vector)
-
-	//more stuff here
-
+func NewVector(x, y, z float64) *Vector {
+	v := new(Vector)
+	v.x = x
+	v.y = y
+	v.z = z
 	return v
 }
 
-func Multiply(a, b vector) float64 {
-	return a.X*b.X + a.Y*b.Y + a.Z*b.Z
+func NewEmptyVector() *Vector {
+	v := new(Vector)
+	v.x = 0
+	v.y = 0
+	v.z = 0
+	return v
 }
 
-func MultiplyScalar(t float64, a vector) vector {
-	var result vector
-	result.X = t * a.X
-	result.Y = t * a.Y
-	result.Z = t * a.Z
-	return result
+// func (v *vector) GetVectorX() float64 {
+// 	return v.x
+// }
+
+// func (v *vector) GetVectorY() float64 {
+// 	return v.y
+// }
+
+// func (v *vector) GetVectorZ() float64 {
+// 	return v.z
+// }
+
+func (v *Vector) Magnitude() float64 {
+	l := math.Sqrt(float64((v.x * v.x) + (v.y * v.y) + (v.z * v.z)))
+	return float64(l)
 }
 
-func Add(a, b vector) vector {
-	var result vector
-	result.X = a.X + b.X
-	result.Y = a.Y + b.Y
-	result.Z = a.Z + b.Z
-	return result
+func (v *Vector) Normalize() *Vector {
+	return NewVector(v.x/v.Magnitude(), v.y/v.Magnitude(), v.z/v.Magnitude())
 }
 
-func Subtract(a, b vector) vector {
-	var result vector
-	result.X = a.X - b.X
-	result.Y = a.Y - b.Y
-	result.Z = a.Z - b.Z
-	return result
+func (v *Vector) Negative() *Vector {
+	return NewVector(-v.x, -v.y, -v.z)
+}
+
+func (v *Vector) DotProduct(vec Vector) float64 {
+	return v.x*vec.x + v.y*vec.y + v.z*vec.z
+}
+
+func (v *Vector) CrossProduct(vec Vector) *Vector {
+	return NewVector(v.y*vec.z-v.z*vec.y,
+		v.z*vec.x-v.x*vec.z,
+		v.x*vec.y+v.y*vec.x)
+}
+
+func (v *Vector) AddVector(vec Vector) *Vector {
+	return NewVector(v.x+vec.x, v.y+vec.y, v.z+vec.z)
+}
+
+func (v *Vector) MultiplyVector(scalar float64) *Vector {
+	return NewVector(v.x*scalar, v.y*scalar, v.z*scalar)
 }

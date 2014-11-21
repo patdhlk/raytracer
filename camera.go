@@ -1,14 +1,14 @@
 package raytracer
 
-type camera struct {
-	pos   vector
-	dir   vector
-	right vector
-	down  vector
+type Camera struct {
+	pos   Vector
+	dir   Vector
+	right Vector
+	down  Vector
 }
 
-func NewCamera() *camera {
-	c := new(camera)
+func NewCamera() *Camera {
+	c := new(Camera)
 
 	return c
 }
