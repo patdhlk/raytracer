@@ -7,11 +7,11 @@ func calcIa(in, ka float64) float64 {
 }
 
 func calcId(in, kd float64, L, N vector) float64 {
-	return in * kd * float64(Multiply(L, N))
+	return in * kd * Multiply(L, N)
 }
 
 func calcIs(in, ks float64, b, V vector, n float64) float64 {
-	return in * ks * math.Pow(-float64(Multiply(b, V)), n)
+	return in * ks * math.Pow(-Multiply(b, V), n)
 }
 
 func CalcBrightness(in float64, b, L, N, V vector, m material, n float64) float64 {

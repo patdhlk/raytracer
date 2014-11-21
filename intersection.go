@@ -2,17 +2,17 @@ package raytracer
 
 import "math"
 
-func CalcIntersectionLineBall(l line, b ball) (int32, float64, float64) {
+func CalcIntersectionLineBall(l line, s sphere) (int32, float64, float64) {
 	var d vector
 	var e, f, g, t1, t2 float64
 	var resCount int32 = 0
 	t1 = 0
 	t2 = 0
 
-	d = Subtract(l.a, b.k)
+	d = Subtract(l.a, s.center)
 
-	f = float64(Multiply(d, l.b))
-	e = math.Pow(f, 2.0) + math.Pow(float64(b.R), 2.0) - math.Pow(float64(Multiply(d, d)), 2.0)
+	f = Multiply(d, l.b)
+	e = math.Pow(f, 2.0) + math.Pow(s.radius, 2.0) - math.Pow(Multiply(d, d), 2.0)
 
 	if e >= 0 {
 		if e == 0 {
@@ -28,6 +28,6 @@ func CalcIntersectionLineBall(l line, b ball) (int32, float64, float64) {
 	return resCount, t1, t2
 }
 
-func CalcIntersectionPlaneLine(p plane, l line) int32 {
+func CalcIntersectionPlaneLine(p plane, l line) float64 {
 	return Multiply(Subtract(p.e, l.a), p.n) / Multiply(l.b, p.n)
 }
