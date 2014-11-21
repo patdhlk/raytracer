@@ -21,6 +21,14 @@ func Multiply(a, b vector) int32 {
 	return a.X*b.X + a.Y*b.Y + a.Z*b.Z
 }
 
+func MultiplyScalar(t int32, a vector) vector {
+	var result vector
+	result.X = t * a.X
+	result.Y = t * a.Y
+	result.Z = t * a.Z
+	return result
+}
+
 func Subtract(a, b vector) vector {
 	var result vector
 	result.X = a.X - b.X
