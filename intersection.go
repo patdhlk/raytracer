@@ -5,8 +5,9 @@ import "math"
 func CalcIntersectionLineBall(l line, b ball) (int32, float64, float64) {
 	var d vector
 	var e, f, g, t1, t2 float64
-	resCount := 0
-	t1, t2 = 0
+	var resCount int32 = 0
+	t1 = 0
+	t2 = 0
 
 	d = Subtract(l.a, b.k)
 
