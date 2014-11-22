@@ -11,11 +11,20 @@ func TestNewVector(t *testing.T) {
 	}
 }
 
-func TestNewEmptyVector(t *testing.T) {
-	vec := NewEmptyVector()
+func TestNewVectorEmpty(t *testing.T) {
+	vec := NewVectorEmpty()
 
 	if vec.x != 0 || vec.y != 0 || vec.z != 0 {
-		t.Errorf("TestNewEmptyVector %v %v %v", vec.x, vec.y, vec.z)
+		t.Errorf("TestNewVectorEmpty %v %v %v", vec.x, vec.y, vec.z)
+	}
+}
+
+func TestNewVectorByVector(t *testing.T) {
+	vec1 := NewVector(3.0, 4.0, 0.0)
+	vec2 := NewVectorByVector(*vec1)
+
+	if vec2.x != 3.0 || vec2.y != 4.0 || vec2.z != 0.0 {
+		t.Errorf("TestNormalize %v %v %v %v %v %v", 3.0, 4.0, 0.0, vec2.x, vec2.y, vec2.z)
 	}
 }
 

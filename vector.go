@@ -11,8 +11,13 @@ func NewVector(x, y, z float64) *Vector {
 	return &v
 }
 
-func NewEmptyVector() *Vector {
+func NewVectorEmpty() *Vector {
 	v := Vector{0, 0, 0}
+	return &v
+}
+
+func NewVectorByVector(vec Vector) *Vector {
+	v := Vector{vec.x, vec.y, vec.z}
 	return &v
 }
 
