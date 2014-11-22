@@ -6,8 +6,6 @@ type Ray struct {
 }
 
 func NewRay(origin, direction Vector) *Ray {
-	r := new(Ray)
-	r.Origin = origin
-	r.Direction = direction
-	return r
+	r := Ray{origin, direction}
+	return &r
 }

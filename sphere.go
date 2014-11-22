@@ -9,11 +9,8 @@ type Sphere struct {
 }
 
 func NewSphere(center Vector, radius float64, color int64) *Sphere {
-	s := new(Sphere)
-	s.Center = center
-	s.Radius = radius
-	s.Color = color
-	return s
+	s := Sphere{center, radius, color}
+	return &s
 }
 
 func (s *Sphere) findIntersection(r Ray) (int32, float64, float64) {

@@ -7,19 +7,13 @@ type Vector struct {
 }
 
 func NewVector(x, y, z float64) *Vector {
-	v := new(Vector)
-	v.x = x
-	v.y = y
-	v.z = z
-	return v
+	v := Vector{x, y, z}
+	return &v
 }
 
 func NewEmptyVector() *Vector {
-	v := new(Vector)
-	v.x = 0
-	v.y = 0
-	v.z = 0
-	return v
+	v := Vector{0, 0, 0}
+	return &v
 }
 
 // func (v *vector) GetVectorX() float64 {
@@ -35,12 +29,13 @@ func NewEmptyVector() *Vector {
 // }
 
 func (v *Vector) Magnitude() float64 {
-	l := math.Sqrt(float64((v.x * v.x) + (v.y * v.y) + (v.z * v.z)))
-	return float64(l)
+	l := math.Sqrt((v.x * v.x) + (v.y * v.y) + (v.z * v.z))
+	return l
 }
 
 func (v *Vector) Normalize() *Vector {
-	return NewVector(v.x/v.Magnitude(), v.y/v.Magnitude(), v.z/v.Magnitude())
+	divisor := v.Magnitude()
+	return NewVector(v.x/divisor, v.y/divisor, v.z/divisor)
 }
 
 func (v *Vector) Negative() *Vector {
@@ -54,7 +49,7 @@ func (v *Vector) DotProduct(vec Vector) float64 {
 func (v *Vector) CrossProduct(vec Vector) *Vector {
 	return NewVector(v.y*vec.z-v.z*vec.y,
 		v.z*vec.x-v.x*vec.z,
-		v.x*vec.y+v.y*vec.x)
+		v.x*vec.y-v.y*vec.x)
 }
 
 func (v *Vector) AddVector(vec Vector) *Vector {
