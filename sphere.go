@@ -9,6 +9,7 @@ type Sphere struct {
 }
 
 func NewSphere(center Vector, radius float64, color int64) *Sphere {
+	//if (radius > 0.0)
 	s := Sphere{center, radius, color}
 	return &s
 }
