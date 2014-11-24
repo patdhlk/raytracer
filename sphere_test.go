@@ -48,7 +48,7 @@ func TestFindIntersection(t *testing.T) {
 }
 
 func TestgetNormalAt(t *testing.T) {
-	s = NewSphere(*NewVector(0.0, 0.0, 0.0), 4.0, 0.0)
+	//s = NewSphere(*NewVector(0.0, 0.0, 0.0), 4.0, 0.0)
 
 	//
 }
