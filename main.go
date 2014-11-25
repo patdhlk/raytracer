@@ -1,12 +1,12 @@
 package raytracer
 
 import (
+	//"de/vorlesung/projekt/raytracer"
 	"log"
 )
 
 func main() {
 	log.Println("main started")
-
 	//create stuff needed for the Raytracer
 	//camera
 	//sphere

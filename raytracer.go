@@ -1,7 +1,10 @@
 package raytracer
 
 import (
+	"image"
+	"image/png"
 	"log"
+	"os"
 )
 
 type Raytracer struct {
@@ -28,12 +31,24 @@ func NewRaytracer(w, h int, c Camera, l Light, s Sphere) *Raytracer {
 // :         if not obstructed: Apply illumination
 // :spawn secondary rays (e.g., reflection, refraction)
 // :combine results
+//the core algorithm
 func (r *Raytracer) RunRaytracer() {
-	log.Println("start raytracing")
+	log.Println(log.Ltime, " start raytracing")
+	m := image.NewRGBA(image.Rectangle{Min: image.Point{0, 0}, Max: image.Point{r.imagewidth, r.imageheight}})
+	log.Println(log.Ltime, " image section created")
 
 	for x := 0; x < r.imagewidth; x++ {
 		for i := 0; i < r.imageheight; i++ {
 
 		}
 	}
+
+	//create image file
+	w, _ := os.Create("rederedImage.png")
+	//png encoding
+	if err := png.Encode(w, m); err != nil {
+		log.Fatal(log.Ltime, " image creation error", err)
+		os.Exit(1)
+	}
+	log.Println(log.Ltime, " finished rendering")
 }
