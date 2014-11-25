@@ -1,12 +1,16 @@
 package raytracer
 
+import (
+	"image/color"
+)
+
 type Plane struct {
 	Point  Vector
 	Normal Vector
-	Color  int64
+	Color  color.RGBA
 }
 
-func NewPlane(point Vector, normal Vector, color int64) *Plane {
+func NewPlane(point Vector, normal Vector, color color.RGBA) *Plane {
 	p := Plane{point, normal, color}
 	return &p
 }

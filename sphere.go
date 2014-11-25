@@ -1,14 +1,17 @@
 package raytracer
 
-import "math"
+import (
+	"image/color"
+	"math"
+)
 
 type Sphere struct {
 	Center Vector
 	Radius float64
-	Color  int64
+	Color  color.RGBA
 }
 
-func NewSphere(center Vector, radius float64, color int64) *Sphere {
+func NewSphere(center Vector, radius float64, color color.RGBA) *Sphere {
 	//if (radius > 0.0)
 	s := Sphere{center, radius, color}
 	return &s

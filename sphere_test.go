@@ -1,6 +1,9 @@
 package raytracer
 
-import "testing"
+import (
+	"image/color"
+	"testing"
+)
 
 func TestNewSphere(t *testing.T) {
 	x, y, z := 4.0, 2.0, 8.0
@@ -8,7 +11,7 @@ func TestNewSphere(t *testing.T) {
 
 	r := 4.0
 
-	s := NewSphere(*vec, r, 0.0)
+	s := NewSphere(*vec, r, color.RGBA{255, 255, 255, 0})
 
 	if s.Center.x != x || s.Center.y != y || s.Center.z != z || s.Radius != r {
 		t.Errorf("TestNewSphere %v %v %v %v %v %v %v %v", x, y, z, r, s.Center.x, s.Center.y, s.Center.z, s.Radius)
@@ -22,7 +25,7 @@ func TestFindIntersection(t *testing.T) {
 	var t1 float64
 	var t2 float64
 
-	s = NewSphere(*NewVector(0.0, 0.0, 0.0), 4.0, 0.0)
+	s = NewSphere(*NewVector(0.0, 0.0, 0.0), 4.0, color.RGBA{255, 255, 255, 0})
 	r = NewRay(*NewVector(0.0, 0.0, 0.0), *NewVector(0.0, 0.0, 0.0))
 	res, t1, t2 = s.findIntersection(*r)
 
@@ -30,7 +33,7 @@ func TestFindIntersection(t *testing.T) {
 		t.Errorf("TestfindIntersection1 %v %v %v", res, t1, t2)
 	}
 
-	s = NewSphere(*NewVector(0.0, 0.0, 0.0), 4.0, 0.0)
+	s = NewSphere(*NewVector(0.0, 0.0, 0.0), 4.0, color.RGBA{255, 255, 255, 0})
 	r = NewRay(*NewVector(2.0, 0.0, 0.0), *NewVector(0.0, 0.0, 0.0))
 	res, t1, t2 = s.findIntersection(*r)
 
@@ -38,7 +41,7 @@ func TestFindIntersection(t *testing.T) {
 		t.Errorf("TestfindIntersection2 %v %v %v", res, t1, t2)
 	}
 
-	s = NewSphere(*NewVector(0.0, 0.0, 0.0), 4.0, 0.0)
+	s = NewSphere(*NewVector(0.0, 0.0, 0.0), 4.0, color.RGBA{255, 255, 255, 0})
 	r = NewRay(*NewVector(3.0, 0.0, 0.0), *NewVector(0.0, 0.0, 0.0))
 	res, t1, t2 = s.findIntersection(*r)
 

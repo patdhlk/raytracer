@@ -1,11 +1,15 @@
 package raytracer
 
+import (
+	"image/color"
+)
+
 type Light struct {
 	Position Vector
-	Color    int64
+	Color    color.RGBA
 }
 
-func NewLight(position Vector, color int64) *Light {
+func NewLight(position Vector, color color.RGBA) *Light {
 	l := Light{position, color}
 	return &l
 }
