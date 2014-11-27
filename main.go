@@ -2,14 +2,13 @@ package raytracer
 
 import (
 	//"de/vorlesung/projekt/raytracer"
+	"fmt"
 	"image"
 	"image/color"
 	"log"
 )
 
-func main() {
-	log.Println("main started")
-
+func raytracing() {
 	var width, height int
 	width = 640
 	height = 480
@@ -70,6 +69,7 @@ func main() {
 
 				resCount, x1, _ := scene_objects[i].findIntersection(*cam_ray)
 				if resCount >= 1 {
+					fmt.Printf("intersection = %v!\n", x1)
 					intersections = append(intersections, x1)
 				}
 			}
@@ -103,4 +103,10 @@ func main() {
 			m.Set(x, y, c)
 		}
 	}
+}
+
+func main() {
+	log.Println("main started")
+
+	//raytracing()
 }
