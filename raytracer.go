@@ -10,13 +10,14 @@ import (
 type Raytracer struct {
 	imagewidth  int
 	imageheight int
+	eye         Vector
 	camera      Camera
 	light       Light
 	sphere      Sphere
 }
 
-func NewRaytracer(w, h int, c Camera, l Light, s Sphere) *Raytracer {
-	r := Raytracer{w, h, c, l, s}
+func NewRaytracer(w, h int, e Vector, c Camera, l Light, s Sphere) *Raytracer {
+	r := Raytracer{w, h, e, c, l, s}
 	return &r
 }
 
@@ -39,7 +40,7 @@ func (r *Raytracer) RunRaytracer() {
 
 	for x := 0; x < r.imagewidth; x++ {
 		for i := 0; i < r.imageheight; i++ {
-
+			//vector from eye to image
 		}
 	}
 
@@ -51,4 +52,39 @@ func (r *Raytracer) RunRaytracer() {
 		os.Exit(1)
 	}
 	log.Println(log.Ltime, " finished rendering")
+}
+
+func winningObjectIndex(object_intersections []float64) int {
+	var index_of_minimum_value int
+
+	if len(object_intersections) == 0 {
+		return -1
+	} else if len(object_intersections) == 1 {
+		if object_intersections[0] > 0 {
+			return 0
+		} else {
+			return -1
+		}
+	} else {
+
+		var max float64
+
+		for i := range object_intersections {
+			if max < object_intersections[i] {
+				max = object_intersections[i]
+			}
+		}
+
+		if max > 0 {
+			for i := range object_intersections {
+				if object_intersections[i] > 0 && object_intersections[i] <= max {
+					max = object_intersections[i]
+					index_of_minimum_value = i
+				}
+			}
+			return index_of_minimum_value
+		} else {
+			return -1
+		}
+	}
 }

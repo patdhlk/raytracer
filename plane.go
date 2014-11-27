@@ -4,6 +4,7 @@ import (
 	"image/color"
 )
 
+//Ebene
 type Plane struct {
 	Point  Vector
 	Normal Vector

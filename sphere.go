@@ -5,6 +5,7 @@ import (
 	"math"
 )
 
+//Ball/Kugel
 type Sphere struct {
 	Center Vector
 	Radius float64
