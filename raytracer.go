@@ -10,14 +10,10 @@ import (
 type Raytracer struct {
 	imagewidth  int
 	imageheight int
-	eye         Vector
-	camera      Camera
-	light       Light
-	sphere      Sphere
 }
 
-func NewRaytracer(w, h int, e Vector, c Camera, l Light, s Sphere) *Raytracer {
-	r := Raytracer{w, h, e, c, l, s}
+func NewRaytracer(w, h int) *Raytracer {
+	r := Raytracer{w, h}
 	return &r
 }
 

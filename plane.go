@@ -16,8 +16,8 @@ func NewPlane(point Vector, normal Vector, color color.RGBA) *Plane {
 	return &p
 }
 
-func (p *Plane) findIntersection(r Ray) float64 {
-	return p.Point.AddVector(*r.Origin.Negative()).DotProduct(p.Normal) / r.Direction.DotProduct(p.Normal)
+func (p *Plane) findIntersection(r Ray) (int32, float64, float64) {
+	return 1, p.Point.AddVector(*r.Origin.Negative()).DotProduct(p.Normal) / r.Direction.DotProduct(p.Normal), 0.0
 }
 
 func (p *Plane) getNormalAt(point Vector) *Vector {
