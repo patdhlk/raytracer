@@ -56,9 +56,9 @@ func main() {
 	//iterating through the image
 	for x := 0; x < width; x++ {
 		for y := 0; y < height; y++ {
-			tempRed := 0.0
-			tempGreen := 0.0
-			tempBlue := 0.0
+			var tempRed uint8 = 0
+			var tempGreen uint8 = 0
+			var tempBlue uint8 = 0
 
 			cam_ray_origin := scene_cam.pos
 			cam_ray_direction := scene_cam.dir
@@ -76,13 +76,14 @@ func main() {
 
 			var accuracy float64
 			accuracy = 0.00000001
-			
+
 			index_of_winning_object := winningObjectIndex(intersections)
 
 			if index_of_winning_object != -1 {
 				// index coresponds to an object in our scene
 				if intersections[index_of_winning_object] > accuracy {
 					// determine the position and direction vectors at the point of intersection
+
 					/*
 						Vect intersection_position = cam_ray_origin.vectAdd(cam_ray_direction.vectMult(intersections.at(index_of_winning_object)));
 						Vect intersecting_ray_direction = cam_ray_direction;
@@ -91,11 +92,14 @@ func main() {
 						tempGreen = intersection_color.getColorGreen();
 						tempBlue = intersection_color.getColorBlue();
 					*/
-					tempBlue = (uint8)tempRed
+
+					scene_light.Position = *NewVector(0.0, 0.0, 0.0)
 				}
 			}
+			var a uint8 = 0
 			//
-			c := color.RGBA{(uint8)tempRed, (uint8)tempGreen, (uint8)tempBlue, (uint8)0}
+			var c color.RGBA = color.RGBA{tempRed, tempGreen, tempBlue, a}
+
 			m.Set(x, y, c)
 		}
 	}
