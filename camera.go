@@ -7,8 +7,8 @@ type Camera struct {
 	down  Vector
 }
 
-func NewCamera() *Camera {
-	c := new(Camera)
+func NewCamera(pos, dir, right, down Vector) *Camera {
+	c := Camera{pos, dir, right, down}
 
-	return c
+	return &c
 }
