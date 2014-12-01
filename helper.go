@@ -6,7 +6,7 @@ func RemoveTransparency(c *color.RGBA) {
 	c.A = 255
 }
 
-func MergeColors(c1 color.RGBA, c2 color.RGBA, reflectionStrength float32) color.RGBA {
+func MergeColors(c1, c2 color.RGBA, reflectionStrength float32) color.RGBA {
 	r1, g1, b1, a1 := c1.RGBA()
 	r2, g2, b2, a2 := c2.RGBA()
 	return color.RGBA{

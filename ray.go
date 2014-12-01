@@ -5,7 +5,7 @@ type Ray struct {
 	direction Vector
 }
 
-func NewRay(origin Vector, direction Vector) Ray {
+func NewRay(origin, direction Vector) Ray {
 	direction = direction.Normalize()
 	ray := Ray{origin, direction}
 	return ray

@@ -4,7 +4,7 @@ type ViewPoint struct {
 	Point Vector
 }
 
-func (this ViewPoint) CreateRayFromViewPointThroughScreen(x int, y int) Ray {
+func (this ViewPoint) CreateRayFromViewPointThroughScreen(x, y int) Ray {
 	//Moves the viewpoint to the middle of the screen
 	x = x - screen.width/2
 	y = y - screen.height/2

@@ -25,7 +25,6 @@ var correctionOfSquareChessboard float64
  * @return color.RGBA Calculated color if there was a intersection
  * @return bool Says, if the returned color should be used or not.Happens, if the ray goes nowhere
  */
-
 func GetColorOfPixelInImage(ray Ray, items []SceneObject, itemBefore int, recursionDeepness int, reflectionStrength float32) (color.RGBA, bool) {
 
 	if recursionDeepness == 0 {
