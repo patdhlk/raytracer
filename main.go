@@ -65,10 +65,12 @@ outer:
 	} else {
 		_, redirectedRay, color, _ := items[actualShortestInAllItems].RayIntersection(ray) //Get detailed information of intersection item
 
+		// TO DO: Calc ray from intersection to light pos
+		rayToLight := redirectedRay
 		isShadow := false
 		// is shadow?
 		for _, _item := range items {
-			_distance, _, _, _intersection := _item.RayIntersection(redirectedRay)
+			_distance, _, _, _intersection := _item.RayIntersection(rayToLight)
 
 			if _intersection && _distance >= 0 {
 				isShadow = true
