@@ -66,13 +66,14 @@ outer:
 		_, redirectedRay, color, _ := items[actualShortestInAllItems].RayIntersection(ray) //Get detailed information of intersection item
 
 		// TO DO: Calc ray from intersection to light pos
-		rayToLight := redirectedRay
+		rayToLight := NewRay(redirectedRay.origin, light.Position.AddVector(redirectedRay.origin.Negative()))
+
 		isShadow := false
 		// is shadow?
 		for _, _item := range items {
-			_distance, _, _, _intersection := _item.RayIntersection(rayToLight)
+			_distance, _, _, _ := _item.RayIntersection(rayToLight)
 
-			if _intersection && _distance >= 0 {
+			if _distance > 0 {
 				isShadow = true
 				break
 			}
@@ -83,14 +84,24 @@ outer:
 		// func CalcBrightness(in float64, b, L, N, V Vector, m Material, n float64) float64 {
 		// TO DO: L: Einheitsvektor in Richtung der Lichtquelle
 		// TO DO: N: Normale des scenceobject
-		//CalcBrightness(255, ray.direction, nil, nil, redirectedRay, Polyethylene, 20)
+		//CalcBrightness(255, ray.direction, rayToLight.direction.Normalize(), nil, redirectedRay, Polyethylene, 20)
 
 		//Starting recursion,
 		colorOfNextIntersectionItem, useThisColor := GetColorOfPixelInImage(redirectedRay, items, actualShortestInAllItems, recursionDeepness-1, reflectionStrength)
 		if useThisColor == false {
+			if isShadow {
+				//color.B = 0
+				//color.G = 0
+				//color.R = 0
+			}
 			return color, true
 
 		} else {
+			if isShadow {
+				//color.B = 0
+				//color.G = 0
+				//color.R = 0
+			}
 			return MergeColors(color, colorOfNextIntersectionItem, reflectionStrength), true
 		}
 	}
