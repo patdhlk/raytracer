@@ -1,4 +1,4 @@
-package raytracer
+package main
 
 import "testing"
 
@@ -21,7 +21,7 @@ func TestNewVectorEmpty(t *testing.T) {
 
 func TestNewVectorByVector(t *testing.T) {
 	vec1 := NewVector(3.0, 4.0, 0.0)
-	vec2 := NewVectorByVector(*vec1)
+	vec2 := NewVectorByVector(vec1)
 
 	if vec2.x != 3.0 || vec2.y != 4.0 || vec2.z != 0.0 {
 		t.Errorf("TestNormalize %v %v %v %v %v %v", 3.0, 4.0, 0.0, vec2.x, vec2.y, vec2.z)
@@ -61,7 +61,7 @@ func TestDotProduct(t *testing.T) {
 	// vec2 := NewVector(6.0, 7.3, 8.0) --> test failed... reason?!?!?!?!?
 	vec2 := NewVector(6.0, 7.2, 8.0)
 
-	result := vec1.DotProduct(*vec2)
+	result := vec1.DotProduct(vec2)
 
 	if result != 91.4 {
 		t.Errorf("TestDotProduct %v %v", 91.4, result)
@@ -72,7 +72,7 @@ func TestCrossProduct(t *testing.T) {
 	vec1 := NewVector(3.0, 4.0, 5.0)
 	vec2 := NewVector(6.0, 7.0, 8.0)
 
-	result := vec1.CrossProduct(*vec2)
+	result := vec1.CrossProduct(vec2)
 
 	if result.x != -3.0 || result.y != 6.0 || result.z != -3.0 {
 		t.Errorf("TestCrossProduct %v %v %v %v %v %v", -3.0, 6.0, -3.0, result.x, result.y, result.z)
@@ -83,7 +83,7 @@ func TestAddVector(t *testing.T) {
 	vec1 := NewVector(3.0, 4.0, 5.0)
 	vec2 := NewVector(6.0, 7.0, 8.0)
 
-	result := vec1.AddVector(*vec2)
+	result := vec1.AddVector(vec2)
 
 	if result.x != 9.0 || result.y != 11.0 || result.z != 13.0 {
 		t.Errorf("TestAddVector %v %v %v %v %v %v", 9.0, 11.0, 13.0, result.x, result.y, result.z)

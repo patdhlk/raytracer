@@ -1,66 +1,53 @@
-package raytracer
+package main
 
 import "math"
 
 type Vector struct {
-	x, y, z float64
+	x float64
+	y float64
+	z float64
 }
 
-func NewVector(x, y, z float64) *Vector {
+func NewVector(x, y, z float64) Vector {
 	v := Vector{x, y, z}
-	return &v
+	return v
 }
 
-func NewVectorEmpty() *Vector {
+func NewVectorEmpty() Vector {
 	v := Vector{0, 0, 0}
-	return &v
+	return v
 }
 
-func NewVectorByVector(vec Vector) *Vector {
+func NewVectorByVector(vec Vector) Vector {
 	v := Vector{vec.x, vec.y, vec.z}
-	return &v
+	return v
 }
 
-// func (v *vector) GetVectorX() float64 {
-// 	return v.x
-// }
-
-// func (v *vector) GetVectorY() float64 {
-// 	return v.y
-// }
-
-// func (v *vector) GetVectorZ() float64 {
-// 	return v.z
-// }
-
-func (v *Vector) Magnitude() float64 {
-	l := math.Sqrt((v.x * v.x) + (v.y * v.y) + (v.z * v.z))
-	return l
+func (this Vector) Negative() Vector {
+	return Vector{-this.x, -this.y, -this.z}
 }
 
-func (v *Vector) Normalize() *Vector {
-	divisor := v.Magnitude()
-	return NewVector(v.x/divisor, v.y/divisor, v.z/divisor)
+func (this Vector) MultiplyVector(m float64) Vector {
+	return Vector{this.x * m, this.y * m, this.z * m}
 }
 
-func (v *Vector) Negative() *Vector {
-	return NewVector(-v.x, -v.y, -v.z)
+func (this Vector) AddVector(v Vector) Vector {
+	return Vector{this.x + v.x, this.y + v.y, this.z + v.z}
 }
 
-func (v *Vector) DotProduct(vec Vector) float64 {
-	return v.x*vec.x + v.y*vec.y + v.z*vec.z
+func (this Vector) Normalize() Vector {
+	n := this.Magnitude()
+	return Vector{this.x / n, this.y / n, this.z / n}
 }
 
-func (v *Vector) CrossProduct(vec Vector) *Vector {
-	return NewVector(v.y*vec.z-v.z*vec.y,
-		v.z*vec.x-v.x*vec.z,
-		v.x*vec.y-v.y*vec.x)
+func (this Vector) DotProduct(v Vector) float64 {
+	return this.x*v.x + this.y*v.y + this.z*v.z
 }
 
-func (v *Vector) AddVector(vec Vector) *Vector {
-	return NewVector(v.x+vec.x, v.y+vec.y, v.z+vec.z)
+func (this Vector) Magnitude() float64 {
+	return math.Sqrt(this.x*this.x + this.y*this.y + this.z*this.z)
 }
 
-func (v *Vector) MultiplyVector(scalar float64) *Vector {
-	return NewVector(v.x*scalar, v.y*scalar, v.z*scalar)
+func (this Vector) CrossProduct(v Vector) Vector {
+	return Vector{this.y*v.z - this.z*v.y, this.z*v.x - this.x*v.z, this.x*v.y - this.y*v.x}
 }

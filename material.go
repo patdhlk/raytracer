@@ -1,4 +1,4 @@
-package raytracer
+package main
 
 type Material interface {
 	getKa() float64

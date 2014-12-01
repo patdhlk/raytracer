@@ -1,11 +1,12 @@
-package raytracer
+package main
 
 type Ray struct {
-	Origin    Vector
-	Direction Vector
+	origin    Vector
+	direction Vector
 }
 
-func NewRay(origin, direction Vector) *Ray {
-	r := Ray{origin, direction}
-	return &r
+func NewRay(origin Vector, direction Vector) Ray {
+	direction = direction.Normalize()
+	ray := Ray{origin, direction}
+	return ray
 }

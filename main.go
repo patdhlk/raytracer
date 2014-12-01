@@ -1,112 +1,131 @@
-package raytracer
+package main
 
-import (
-	//"de/vorlesung/projekt/raytracer"
-	"fmt"
-	"image"
-	"image/color"
-	"log"
-)
+import "image/png"
+import "image/color"
+import "os"
+import "log"
 
-func raytracing() {
-	var width, height int
-	width = 640
-	height = 480
+var viewPoint ViewPoint
+var light Light
+var screen *Screen
+var openingAngleOfCamera float64
+var correctionOfSquareChessboard float64
 
-	m := image.NewRGBA(image.Rectangle{Min: image.Point{0, 0}, Max: image.Point{width, height}})
+/**
+ * GetColorImagePixel
+ *
+ * Gets the color of a Pixel in Image. If there is a intersection with a item, it gets the
+ * redirected ray and calls GetColorImagePixel again. So you can see reflections on the items.
+ *
+ * @param ray Ray to cross the items
+ * @param items All items in the screen
+ * @param itemBefore Item which was crossed before, is needed in recursion case
+ * @param recursionDeepness How often reflextions are allowed
+ * @param reflectionStrength How strong the reflection should be
+ * @return color.RGBA Calculated color if there was a intersection
+ * @return bool Says, if the returned color should be used or not.Happens, if the ray goes nowhere
+ */
 
-	O := NewVector(0, 0, 0)
-	X := NewVector(1, 0, 0)
-	Y := NewVector(0, 1, 0)
-	//Z := NewVector(0, 0, 1)
+func GetColorOfPixelInImage(ray Ray, items []SceneObject, itemBefore int, recursionDeepness int, reflectionStrength float32) (color.RGBA, bool) {
 
-	new_sphere_location := NewVector(1.75, -0.25, 0)
+	if recursionDeepness == 0 {
+		return color.RGBA{0, 0, 0, 0}, false
+	}
 
-	//camera
-	campos := NewVector(3, 1.5, -4)
-	look_at := NewVector(0, 0, 0)
-	diff_btw := NewVector(campos.x-look_at.x, campos.y-look_at.y, campos.z-look_at.z)
+	var minDistanceOfAllItems float64 = 99999999999
+	actualShortestInAllItems := 0
+	intersectionWithAnyItem := false
 
-	camdir := diff_btw.Negative().Normalize()
-	camright := Y.CrossProduct(*camdir).Negative()
-	camdown := camright.CrossProduct(*camdir)
-	scene_cam := Camera{*campos, *camdir, *camright, *camdown}
+outer:
+	for index, item := range items { //Find nearest item
+		if itemBefore == index { //Avoids crossing the same item again, could happen because of rounding errors
+			continue outer
+		}
 
-	white_light := color.RGBA{255, 255, 255, 255}
-	pretty_green := color.RGBA{0, 255, 0, 1}
-	maroon := color.RGBA{165, 74, 0, 1}
-	tile := color.RGBA{255, 0, 0, 1}
-	//gray := color.RGBA{142, 138, 138, 1}
-	//black := color.RGBA{0, 0, 0, 1}
+		distance, _, _, intersection := item.RayIntersection(ray)
 
-	//light
-	light_position := NewVector(-7, 10, -10)
-	scene_light := NewLight(*light_position, white_light)
-	//var light_sources []Vector
-	//light_sources = append(light_sources, scene_light.position)
+		if intersection == false { //No intersection with item
+			continue outer
+		}
 
-	//scene objects
-	scene_sphere := NewSphere(*O, 1, pretty_green)
-	scene_sphere2 := NewSphere(*new_sphere_location, 0.5, maroon)
-	scene_plane := NewPlane(*Y, *X, tile)
-	var scene_objects []GraphicalObject
-	scene_objects = append(scene_objects, scene_sphere, scene_sphere2, scene_plane)
+		if distance < 0 { //If distance < 0, intersection behind viewpoint -> uninteresting intersection
+			continue outer
+		}
 
-	//iterating through the image
-	for x := 0; x < width; x++ {
-		for y := 0; y < height; y++ {
-			var tempRed uint8 = 0
-			var tempGreen uint8 = 0
-			var tempBlue uint8 = 0
+		if distance < minDistanceOfAllItems {
+			intersectionWithAnyItem = true
+			minDistanceOfAllItems = distance
+			actualShortestInAllItems = index
+		}
 
-			cam_ray_origin := scene_cam.pos
-			cam_ray_direction := scene_cam.dir
+	}
 
-			cam_ray := NewRay(cam_ray_origin, cam_ray_direction)
+	if intersectionWithAnyItem == false {
+		return color.RGBA{0, 0, 0, 0}, false
+	} else {
+		_, redirectedRay, color, _ := items[actualShortestInAllItems].RayIntersection(ray) //Get detailed information of intersection item
 
-			var intersections []float64
-			for i := 0; i < len(scene_objects); i++ {
+		//Starting recursion,
+		colorOfNextIntersectionItem, useThisColor := GetColorOfPixelInImage(redirectedRay, items, actualShortestInAllItems, recursionDeepness-1, reflectionStrength)
+		if useThisColor == false {
+			return color, true
 
-				resCount, x1, _ := scene_objects[i].findIntersection(*cam_ray)
-				if resCount >= 1 {
-					fmt.Printf("intersection = %v!\n", x1)
-					intersections = append(intersections, x1)
-				}
-			}
-
-			var accuracy float64
-			accuracy = 0.00000001
-
-			index_of_winning_object := winningObjectIndex(intersections)
-
-			if index_of_winning_object != -1 {
-				// index coresponds to an object in our scene
-				if intersections[index_of_winning_object] > accuracy {
-					// determine the position and direction vectors at the point of intersection
-
-					/*
-						Vect intersection_position = cam_ray_origin.vectAdd(cam_ray_direction.vectMult(intersections.at(index_of_winning_object)));
-						Vect intersecting_ray_direction = cam_ray_direction;
-						Color intersection_color = getColorAt(intersection_position, intersecting_ray_direction, scene_objects, index_of_winning_object, light_sources, accuracy, ambientlight);
-						tempRed = intersection_color.getColorRed();
-						tempGreen = intersection_color.getColorGreen();
-						tempBlue = intersection_color.getColorBlue();
-					*/
-
-					scene_light.Position = *NewVector(0.0, 0.0, 0.0)
-				}
-			}
-			var a uint8 = 0
-			//
-			var c color.RGBA = color.RGBA{tempRed, tempGreen, tempBlue, a}
-
-			m.Set(x, y, c)
+		} else {
+			return MergeColors(color, colorOfNextIntersectionItem, reflectionStrength), true
 		}
 	}
 }
 
 func main() {
-	log.Println("main started")
+	log.Println("Starting programm Raytracing (Stefan B., Matthias F.)")
 
-	//raytracing()
+	//Setting global variables
+	screen = NewScreen(1600, 1200) //width, height
+	viewPoint = ViewPoint{Vector{17, 17, -60}}
+	light = Light{Vector{30, 30, 30}}
+	openingAngleOfCamera = 200
+	correctionOfSquareChessboard = 4
+
+	//Local variables
+	recursionDeepness := 5         //Maximum number of reflextions between items
+	var reflection float32 = 0.001 //Value between 0.0 and 1.0. Should be under 0.003, if not it creates wrong colors
+	items := make([]SceneObject, 0)
+	nameOfOutputFile := "test.png"
+
+	//Add Balls
+	items = append(items, NewSphere(NewVector(4, 9, 14), 9.0, color.RGBA{200, 100, 0, 255}))
+	items = append(items, NewSphere(NewVector(25, 9, 10), 4.0, color.RGBA{50, 25, 80, 255}))
+	//items = append(items, NewSphere(NewVector(22, 8, 5), 6.0, color.RGBA{80, 0, 255, 255}))
+	//items = append(items, NewSphere(NewVector(20, 20, 20), 8.0, color.RGBA{255, 255, 25, 255}))
+	items = append(items, NewPlane(NewVector(0, -2, 3), NewVector(0, 8, 1), color.RGBA{0, 0, 0, 255})) //Location, direction, color
+
+	log.Println("Screen size:", screen.width, "x", screen.height)
+	log.Println("Location of Viewpoint:", viewPoint.Point.x, viewPoint.Point.y, viewPoint.Point.z)
+	log.Println("Nr of items to intersect with:", len(items))
+	log.Println("Recursion deepness:", recursionDeepness)
+
+	for index, item := range items {
+		log.Println("Values of item", index, ":", item)
+	}
+
+	for x := 0; x <= screen.width; x++ {
+		for y := 0; y <= screen.height; y++ {
+			//x is the x axis, positiv is right
+			//y is the y axis, positiv is top
+
+			r := viewPoint.CreateRayFromViewPointThroughScreen(x, y)
+
+			colorOfPixel, _ := GetColorOfPixelInImage(r, items, -1, recursionDeepness, reflection)
+
+			RemoveTransparency(&colorOfPixel)
+			screen.image.SetRGBA(x, y, colorOfPixel)
+		}
+	}
+
+	log.Println("Creating output file", nameOfOutputFile)
+	w, _ := os.Create(nameOfOutputFile)
+	if err := png.Encode(w, screen.image); err != nil {
+		log.Println("Error writing image on Disk")
+		os.Exit(1)
+	}
 }

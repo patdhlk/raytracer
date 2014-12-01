@@ -1,48 +1,62 @@
-package raytracer
+package main
 
-import (
-	"image/color"
-	"math"
-)
+import "image/color"
+import "math"
 
-//Ball/Kugel
 type Sphere struct {
-	Center Vector
-	Radius float64
-	Color  color.RGBA
+	radius   float64
+	location Vector
+	color    color.RGBA
 }
 
-func NewSphere(center Vector, radius float64, color color.RGBA) *Sphere {
-	//if (radius > 0.0)
-	s := Sphere{center, radius, color}
-	return &s
-}
+func (this Sphere) RayIntersection(ray Ray) (float64, Ray, color.RGBA, bool) {
+	d := ray.origin.AddVector(this.location.Negative())
 
-func (s *Sphere) findIntersection(r Ray) (int32, float64, float64) {
-	var e, f, g, t1, t2 float64
-	var resCount int32 = 0
-	t1 = 0
-	t2 = 0
+	dDotB := d.DotProduct(ray.direction) //Solution from db
+	inSqrtPart := dDotB*dDotB + this.radius*this.radius - d.DotProduct(d)
 
-	var d = *r.Origin.AddVector(*s.Center.Negative())
+	if inSqrtPart < 0 { //Value in square root negativ -> No intersection with ball
+		return 0, ray, color.RGBA{0, 0, 0, 0}, false
+	}
 
-	f = d.DotProduct(r.Direction)
-	e = math.Pow(f, 2.0) + math.Pow(s.Radius, 2.0) - math.Pow(d.DotProduct(d), 2.0)
+	t1 := -dDotB + math.Sqrt(inSqrtPart)
+	t2 := -dDotB - math.Sqrt(inSqrtPart)
 
-	if e >= 0 {
-		if e == 0 {
-			resCount = 1
-			t1 = -f
+	//Getting nearest of 2 possible intersections
+	var intersectionDistance float64
+
+	if t1 < 0 {
+		intersectionDistance = t2
+	} else {
+		if t2 < 0 {
+			intersectionDistance = t1
 		} else {
-			g = math.Sqrt(e)
-			resCount = 2
-			t1 = -f + g
-			t2 = -f - g
+			if t1 < t2 {
+				intersectionDistance = t1
+			} else {
+				intersectionDistance = t2
+			}
 		}
 	}
-	return resCount, t1, t2
+
+	reflectionRay := this.CalculateReflectionRay(ray, intersectionDistance)
+
+	//Berechne Beleuchtung mit phong modell
+
+	return intersectionDistance, reflectionRay, this.color, true
 }
 
-func (s *Sphere) getNormalAt(point Vector) *Vector {
-	return point.AddVector(*s.Center.Negative()).Normalize()
+func (this Sphere) CalculateReflectionRay(ray Ray, intersectionDistance float64) Ray {
+	locationOfIntersection := ray.origin.AddVector(ray.direction.MultiplyVector(intersectionDistance))
+
+	normal := locationOfIntersection.AddVector(this.location.Negative())
+	//normal = Vector{-normal.x, -normal.y, normal.z} //Adjust x and y of normal
+
+	bN := ray.direction.DotProduct(normal)
+	directionOfReflectionRay := ray.direction.AddVector(normal.MultiplyVector(2 * bN).Negative())
+	return NewRay(locationOfIntersection, directionOfReflectionRay)
+}
+func NewSphere(location Vector, radius float64, color color.RGBA) Sphere {
+	b := Sphere{radius, location, color}
+	return b
 }

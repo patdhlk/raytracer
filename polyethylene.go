@@ -1,4 +1,4 @@
-package raytracer
+package main
 
 type Polyethylene struct {
 }
