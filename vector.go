@@ -37,6 +37,9 @@ func (this Vector) AddVector(v Vector) Vector {
 
 func (this Vector) Normalize() Vector {
 	n := this.Magnitude()
+	if this == NewVectorEmpty() {
+		return NewVectorEmpty()
+	}
 	return Vector{this.x / n, this.y / n, this.z / n}
 }
 

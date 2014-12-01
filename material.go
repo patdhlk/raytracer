@@ -4,4 +4,5 @@ type Material interface {
 	getKa() float64
 	getKd() float64
 	getKs() float64
+	getN() int
 }

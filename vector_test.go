@@ -44,6 +44,14 @@ func TestNormalize(t *testing.T) {
 	if vec.x != 0.6 || vec.y != 0.8 || vec.z != 0.0 {
 		t.Errorf("TestNormalize %v %v %v %v %v %v", 0.6, 0.8, 0.0, vec.x, vec.y, vec.z)
 	}
+
+	vec = NewVector(0.0, 0.0, 0.0)
+
+	vec = vec.Normalize()
+
+	if vec.x != 0.0 || vec.y != 0.0 || vec.z != 0.0 {
+		t.Errorf("TestNormalize %v %v %v %v %v %v", 0.0, 0.0, 0.0, vec.x, vec.y, vec.z)
+	}
 }
 
 func TestNegative(t *testing.T) {
