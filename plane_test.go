@@ -40,3 +40,27 @@ func TestPlaneFindIntersection(t *testing.T) {
 		t.Errorf("TestPlaneFindIntersection3 %v %v %v", res, distance, color)
 	}
 }
+
+func TestPlaneGetNormalAt(t *testing.T) {
+	p := NewPlane(NewVector(0, 0, 0), NewVector(0, 1, 0), color.RGBA{255, 255, 255, 0})
+
+	v := p.GetNormalAt(NewVector(0, 2, 0))
+
+	if v != NewVector(0, 1, 0) {
+		t.Errorf("TestPlaneGetNormalAt1 %v", v)
+	}
+
+	p = NewPlane(NewVector(0, 0, 0), NewVector(0, 1, 0), color.RGBA{255, 255, 255, 0})
+
+	v = p.GetNormalAt(NewVector(2, 6, 2))
+
+	if v != NewVector(0, 1, 0) {
+		t.Errorf("TestPlaneGetNormalAt2 %v", v)
+	}
+}
+
+func TestPlaneGetReflectionRay(t *testing.T) {
+	//s = NewSphere(*NewVector(0.0, 0.0, 0.0), 4.0, 0.0)
+
+	//
+}

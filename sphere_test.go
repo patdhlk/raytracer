@@ -19,7 +19,7 @@ func TestNewSphere(t *testing.T) {
 	}
 }
 
-func TestFindIntersection(t *testing.T) {
+func TestSphereFindIntersection(t *testing.T) {
 	c := color.RGBA{255, 255, 255, 0}
 	s := NewSphere(NewVector(0.0, 0.0, 0.0), 4.0, c)
 	r := NewRay(NewVector(0.0, 0.0, 0.0), NewVector(0.0, 0.0, 0.0))
@@ -54,7 +54,25 @@ func TestFindIntersection(t *testing.T) {
 	}
 }
 
-func TestgetNormalAt(t *testing.T) {
+func TestSphereGetNormalAt(t *testing.T) {
+	s := NewSphere(NewVector(0.0, 0.0, 0.0), 4.0, color.RGBA{255, 255, 255, 0})
+
+	v := s.GetNormalAt(NewVector(0, 2, 0))
+
+	if v != NewVector(0, 1, 0) {
+		t.Errorf("TestSphereGetNormalAt1 %v", v)
+	}
+
+	s = NewSphere(NewVector(2.0, 2.0, 2.0), 4.0, color.RGBA{255, 255, 255, 0})
+
+	v = s.GetNormalAt(NewVector(2, 6, 2))
+
+	if v != NewVector(0, 1, 0) {
+		t.Errorf("TestSphereGetNormalAt2 %v", v)
+	}
+}
+
+func TestSphereGetReflectionRay(t *testing.T) {
 	//s = NewSphere(*NewVector(0.0, 0.0, 0.0), 4.0, 0.0)
 
 	//
