@@ -59,7 +59,7 @@ outer:
 	} else {
 		_distance, color, _ := items[actualShortestInAllItems].FindIntersection(ray) //Get detailed information of intersection item
 
-		redirectedRay := items[actualShortestInAllItems].GetReflectionRay(ray, _distance)
+		redirectedRay, _ := items[actualShortestInAllItems].GetReflectionRay(ray, _distance)
 
 		rayToLight := NewRay(redirectedRay.origin, light.Position.AddVector(redirectedRay.origin.Negative()))
 
@@ -104,7 +104,7 @@ outer:
 	}
 }
 
-func raytracing() {
+func raytracing(file string) {
 	log.Println("Start raytracing")
 
 	screen := NewScreen(1600, 1200)
@@ -114,7 +114,7 @@ func raytracing() {
 	recursionDeepness := 5
 	var reflection float32 = 0.001
 
-	nameOfOutputFile := "test_.png"
+	nameOfOutputFile := file
 
 	scene := NewDefaultScene()
 
@@ -138,5 +138,5 @@ func raytracing() {
 }
 
 func main() {
-	raytracing()
+	raytracing("default.png")
 }

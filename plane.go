@@ -1,6 +1,9 @@
 package main
 
-import "image/color"
+import (
+	"errors"
+	"image/color"
+)
 
 type Plane struct {
 	location        Vector
@@ -21,10 +24,14 @@ func (this Plane) FindIntersection(ray Ray) (float64, color.RGBA, bool) {
 	return intersectionDistance, returnColor, true
 }
 
-func (this Plane) GetReflectionRay(ray Ray, intersectionDistance float64) Ray {
-	intersection := ray.origin.AddVector(ray.direction.MultiplyVector(intersectionDistance))
-	reflect := CalcReflecion(ray.direction, this.normalDirection)
-	return NewRay(intersection, reflect)
+func (this Plane) GetReflectionRay(ray Ray, intersectionDistance float64) (Ray, error) {
+	_, _, intersect := this.FindIntersection(ray)
+	if intersect {
+		intersection := ray.origin.AddVector(ray.direction.MultiplyVector(intersectionDistance))
+		reflect := CalcReflecion(ray.direction, this.normalDirection)
+		return NewRay(intersection, reflect), nil
+	}
+	return NewRay(NewVector(0, 0, 0), NewVector(0, 0, 0)), errors.New("Not valid")
 }
 
 func (this Plane) GetNormalAt(point Vector) Vector {

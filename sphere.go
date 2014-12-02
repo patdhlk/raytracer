@@ -1,6 +1,9 @@
 package main
 
-import "image/color"
+import (
+	"errors"
+	"image/color"
+)
 
 import "math"
 
@@ -47,11 +50,16 @@ func (this Sphere) GetNormalAt(point Vector) Vector {
 	return point.AddVector(this.location.Negative()).Normalize()
 }
 
-func (this Sphere) GetReflectionRay(ray Ray, intersectionDistance float64) Ray {
-	intersection := ray.origin.AddVector(ray.direction.MultiplyVector(intersectionDistance))
-	normal := intersection.AddVector(this.location.Negative())
-	reflect := CalcReflecion(ray.direction, normal)
-	return NewRay(intersection, reflect)
+func (this Sphere) GetReflectionRay(ray Ray, intersectionDistance float64) (Ray, error) {
+	_, _, intersect := this.FindIntersection(ray)
+	if intersect {
+		intersection := ray.origin.AddVector(ray.direction.MultiplyVector(intersectionDistance))
+		normal := intersection.AddVector(this.location.Negative())
+		reflect := CalcReflecion(ray.direction, normal)
+		return NewRay(intersection, reflect), nil
+	}
+	return NewRay(NewVector(0, 0, 0), NewVector(0, 0, 0)), errors.New("Not valid")
+
 }
 
 func NewSphere(location Vector, radius float64, color color.RGBA) Sphere {

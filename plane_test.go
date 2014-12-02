@@ -60,7 +60,18 @@ func TestPlaneGetNormalAt(t *testing.T) {
 }
 
 func TestPlaneGetReflectionRay(t *testing.T) {
-	//s = NewSphere(*NewVector(0.0, 0.0, 0.0), 4.0, 0.0)
+	p := NewPlane(NewVector(0, 0, 0), NewVector(0, 1, 0), color.RGBA{255, 255, 255, 0})
+	r := NewRay(NewVector(0, 1, 0), NewVector(0, -1, 0))
+	res, err := p.GetReflectionRay(r, 1)
 
-	//
+	if err == nil || res.origin != NewVector(0, 0, 0) || res.direction != NewVector(0, 0, 0) {
+		t.Errorf("TestPlaneGetReflectionRay1 %v %v", res, err)
+	}
+
+	r = NewRay(NewVector(0, -1, 0), NewVector(0, -1, 0))
+	res, err = p.GetReflectionRay(r, 1)
+
+	if err != nil || res.origin != NewVector(0, -2, 0) || res.direction != NewVector(0, 1, 0) {
+		t.Errorf("TestPlaneGetReflectionRay2 %v %v", res, err)
+	}
 }
