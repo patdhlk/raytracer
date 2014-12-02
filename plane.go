@@ -9,6 +9,8 @@ type Plane struct {
 	color           color.RGBA
 }
 
+var correctionOfSquareChessboard float64 = 4.0
+
 func (this Plane) RayIntersection(ray Ray) (float64, Ray, color.RGBA, bool) {
 	var intersectionDistance float64 = ray.origin.AddVector(this.location.Negative()).DotProduct(this.normalDirection) / ray.direction.DotProduct(this.normalDirection)
 
