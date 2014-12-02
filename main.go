@@ -35,7 +35,7 @@ outer:
 			continue outer
 		}
 
-		distance, _, _, intersection := item.RayIntersection(ray)
+		distance, _, intersection := item.FindIntersection(ray)
 
 		if intersection == false { //No intersection with item
 			continue outer
@@ -56,7 +56,9 @@ outer:
 	if intersectionWithAnyItem == false {
 		return color.RGBA{0, 0, 0, 0}, false
 	} else {
-		_, redirectedRay, color, _ := items[actualShortestInAllItems].RayIntersection(ray) //Get detailed information of intersection item
+		_distance, color, _ := items[actualShortestInAllItems].FindIntersection(ray) //Get detailed information of intersection item
+
+		redirectedRay := items[actualShortestInAllItems].GetReflectionRay(ray, _distance)
 
 		// TO DO: Calc ray from intersection to light pos
 		rayToLight := NewRay(redirectedRay.origin, light.Position.AddVector(redirectedRay.origin.Negative()))
@@ -64,7 +66,7 @@ outer:
 		isShadow := false
 		// is shadow?
 		for _, _item := range items {
-			_distance, _, _, _ := _item.RayIntersection(rayToLight)
+			_distance, _, _ := _item.FindIntersection(rayToLight)
 
 			if _distance > 0 {
 				isShadow = true
@@ -110,7 +112,7 @@ func raytracing() {
 	recursionDeepness := 5
 	var reflection float32 = 0.001
 
-	nameOfOutputFile := "test.png"
+	nameOfOutputFile := "test_.png"
 
 	scene := NewDefaultScene()
 

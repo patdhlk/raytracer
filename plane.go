@@ -11,14 +11,15 @@ type Plane struct {
 
 var correctionOfSquareChessboard float64 = 4.0
 
-func (this Plane) RayIntersection(ray Ray) (float64, Ray, color.RGBA, bool) {
+func (this Plane) FindIntersection(ray Ray) (float64, color.RGBA, bool) {
 	var intersectionDistance float64 = ray.origin.AddVector(this.location.Negative()).DotProduct(this.normalDirection) / ray.direction.DotProduct(this.normalDirection)
 
 	if intersectionDistance < 0 {
-		return 0, ray, color.RGBA{0, 0, 0, 0}, false
+		return 0, color.RGBA{0, 0, 0, 0}, false
 	}
 
-	reflectionRay, locationOfIntersection := this.CalculateReflectionRay(ray, intersectionDistance)
+	reflectionRay := this.GetReflectionRay(ray, intersectionDistance)
+	locationOfIntersection := reflectionRay.origin
 
 	//Create chessboard by inverting plane color if x and y are both eval or odd
 	chessboardVector := locationOfIntersection.AddVector(this.location.Negative())
@@ -28,16 +29,14 @@ func (this Plane) RayIntersection(ray Ray) (float64, Ray, color.RGBA, bool) {
 		returnColor = color.RGBA{uint8(255 - this.color.R), uint8(255 - this.color.G), uint8(255 - this.color.B), uint8(255 - this.color.A)}
 	}
 
-	return intersectionDistance, reflectionRay, returnColor, true
+	return intersectionDistance, returnColor, true
 }
 
-func (this Plane) CalculateReflectionRay(ray Ray, intersectionDistance float64) (Ray, Vector) {
+func (this Plane) GetReflectionRay(ray Ray, intersectionDistance float64) Ray {
 	locationOfIntersection := ray.origin.AddVector(ray.direction.MultiplyVector(intersectionDistance))
 
-	bN := ray.direction.DotProduct(this.normalDirection)
-	directionOfReflectionRay := ray.direction.AddVector(this.normalDirection.MultiplyVector(2 * bN).Negative())
-
-	return NewRay(locationOfIntersection, directionOfReflectionRay), locationOfIntersection
+	reflect := CalcReflecion(ray.direction, this.normalDirection)
+	return NewRay(locationOfIntersection, reflect)
 }
 
 func NewPlane(location Vector, direction Vector, Color color.RGBA) Plane {

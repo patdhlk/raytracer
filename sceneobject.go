@@ -3,5 +3,6 @@ package main
 import "image/color"
 
 type SceneObject interface {
-	RayIntersection(ray Ray) (float64, Ray, color.RGBA, bool)
+	FindIntersection(ray Ray) (float64, color.RGBA, bool)
+	GetReflectionRay(ray Ray, intersectionDistance float64) Ray
 }
