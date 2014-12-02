@@ -61,11 +61,9 @@ outer:
 
 		redirectedRay := items[actualShortestInAllItems].GetReflectionRay(ray, _distance)
 
-		// TO DO: Calc ray from intersection to light pos
 		rayToLight := NewRay(redirectedRay.origin, light.Position.AddVector(redirectedRay.origin.Negative()))
 
 		isShadow := false
-		// is shadow?
 		for _index, _item := range items {
 			if itemBefore != _index {
 				_distance, _, _ := _item.FindIntersection(rayToLight)
@@ -76,17 +74,11 @@ outer:
 				}
 			}
 		}
-		if isShadow {
-			//fmt.Println("IsShadow %v %v", ray, redirectedRay)
-		}
-		// func CalcBrightness(in float64, b, L, N, V Vector, m Material, n float64) float64 {
-		// TO DO: L: Einheitsvektor in Richtung der Lichtquelle
-		// TO DO: N: Normale des scenceobject
-		p := Polyethylene{}
-		brightness := CalcBrightness(255, ray.direction, rayToLight.direction.Normalize(), ray.direction.Normalize(), redirectedRay.direction, p)
 
-		//fmt.Println("brightness %v", brightness)
-		//Starting recursion,
+		p := Polyethylene{}
+		normal := items[actualShortestInAllItems].GetNormalAt(redirectedRay.origin)
+		brightness := CalcBrightness(255, ray.direction, rayToLight.direction.Normalize(), normal, redirectedRay.direction, p)
+
 		colorOfNextIntersectionItem, useThisColor := GetColorOfPixelInImage(redirectedRay, light, items, actualShortestInAllItems, recursionDeepness-1, reflectionStrength)
 		if useThisColor == false {
 			if isShadow {

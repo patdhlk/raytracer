@@ -22,9 +22,13 @@ func (this Plane) FindIntersection(ray Ray) (float64, color.RGBA, bool) {
 }
 
 func (this Plane) GetReflectionRay(ray Ray, intersectionDistance float64) Ray {
-	locationOfIntersection := ray.origin.AddVector(ray.direction.MultiplyVector(intersectionDistance))
+	intersection := ray.origin.AddVector(ray.direction.MultiplyVector(intersectionDistance))
 	reflect := CalcReflecion(ray.direction, this.normalDirection)
-	return NewRay(locationOfIntersection, reflect)
+	return NewRay(intersection, reflect)
+}
+
+func (this Plane) GetNormalAt(point Vector) Vector {
+	return this.normalDirection
 }
 
 func NewPlane(location Vector, direction Vector, Color color.RGBA) Plane {

@@ -43,11 +43,15 @@ func (this Sphere) FindIntersection(ray Ray) (float64, color.RGBA, bool) {
 	return intersectionDistance, this.color, true
 }
 
+func (this Sphere) GetNormalAt(point Vector) Vector {
+	return point.AddVector(this.location.Negative()).Normalize()
+}
+
 func (this Sphere) GetReflectionRay(ray Ray, intersectionDistance float64) Ray {
 	intersection := ray.origin.AddVector(ray.direction.MultiplyVector(intersectionDistance))
 	normal := intersection.AddVector(this.location.Negative())
 	reflect := CalcReflecion(ray.direction, normal)
-	return NewRay(locationOfIntersection, reflect)
+	return NewRay(intersection, reflect)
 }
 
 func NewSphere(location Vector, radius float64, color color.RGBA) Sphere {
