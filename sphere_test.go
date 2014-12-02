@@ -23,34 +23,34 @@ func TestFindIntersection(t *testing.T) {
 	c := color.RGBA{255, 255, 255, 0}
 	s := NewSphere(NewVector(0.0, 0.0, 0.0), 4.0, c)
 	r := NewRay(NewVector(0.0, 0.0, 0.0), NewVector(0.0, 0.0, 0.0))
-	distance, ray, color, res := s.RayIntersection(r)
+	distance, color, res := s.FindIntersection(r)
 
 	if res != true || distance != 4.0 {
-		t.Errorf("TestfindIntersection1 %v %v %v %v", res, distance, ray, color)
+		t.Errorf("TestSphereFindIntersection1 %v %v %v", res, distance, color)
 	}
 
 	s = NewSphere(NewVector(0.0, 0.0, 0.0), 4.0, c)
 	r = NewRay(NewVector(2.0, 0.0, 0.0), NewVector(0.0, 0.0, 0.0))
-	distance, ray, color, res = s.RayIntersection(r)
+	distance, color, res = s.FindIntersection(r)
 
 	if res != true || distance != math.Sqrt(12.0) {
-		t.Errorf("TestfindIntersection2 %v %v %v %v", res, distance, ray, color)
+		t.Errorf("TestSphereFindIntersection2 %v %v %v", res, distance, color)
 	}
 
 	s = NewSphere(NewVector(0.0, 0.0, 0.0), 4.0, c)
 	r = NewRay(NewVector(3.0, 0.0, 0.0), NewVector(0.0, 0.0, 0.0))
-	distance, ray, color, res = s.RayIntersection(r)
+	distance, color, res = s.FindIntersection(r)
 
 	if res != true || distance != math.Sqrt(7.0) {
-		t.Errorf("TestfindIntersection3 %v %v %v %v", res, distance, ray, color)
+		t.Errorf("TestSphereFindIntersection3 %v %v %v", res, distance, color)
 	}
 
 	s = NewSphere(NewVector(0.0, 0.0, 0.0), 4.0, c)
 	r = NewRay(NewVector(5.0, 0.0, 0.0), NewVector(0.0, 1.0, 0.0))
-	distance, ray, color, res = s.RayIntersection(r)
+	distance, color, res = s.FindIntersection(r)
 
 	if res != false || distance != math.Sqrt(0.0) {
-		t.Errorf("TestfindIntersection3 %v %v %v %v", res, distance, ray, color)
+		t.Errorf("TestSphereFindIntersection4 %v %v %v", res, distance, color)
 	}
 }
 

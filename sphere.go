@@ -20,18 +20,23 @@ func (this Sphere) FindIntersection(ray Ray) (float64, color.RGBA, bool) {
 		return 0, color.RGBA{0, 0, 0, 0}, false
 	}
 
+	t1 := -dDotB + math.Sqrt(inSqrtPart)
+	t2 := -dDotB - math.Sqrt(inSqrtPart)
+
 	//Getting nearest of 2 possible intersections
 	var intersectionDistance float64
 
-	if inSqrtPart == 0 {
-		intersectionDistance = -dDotB
+	if t1 < 0 {
+		intersectionDistance = t2
 	} else {
-		t1 := -dDotB + math.Sqrt(inSqrtPart)
-		t2 := -dDotB - math.Sqrt(inSqrtPart)
-		if t1 < t2 {
+		if t2 < 0 {
 			intersectionDistance = t1
 		} else {
-			intersectionDistance = t2
+			if t1 < t2 {
+				intersectionDistance = t1
+			} else {
+				intersectionDistance = t2
+			}
 		}
 	}
 

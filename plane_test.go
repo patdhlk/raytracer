@@ -22,21 +22,21 @@ func TestNewPlane(t *testing.T) {
 func TestPlaneFindIntersection(t *testing.T) {
 	p := NewPlane(NewVector(0, 0, 0), NewVector(0, 1, 0), color.RGBA{255, 255, 255, 0})
 
-	distance, ray, color, res := p.RayIntersection(NewRay(NewVector(0, 0, 0), NewVector(0, -1, 0)))
+	distance, color, res := p.FindIntersection(NewRay(NewVector(0, 0, 0), NewVector(0, -1, 0)))
 
 	if res != true || distance != 0.0 {
-		t.Errorf("TestPlaneFindIntersection1 %v %v %v %v", res, distance, ray, color)
+		t.Errorf("TestPlaneFindIntersection1 %v %v %v", res, distance, color)
 	}
 
-	distance, ray, color, res = p.RayIntersection(NewRay(NewVector(0, 1, 0), NewVector(0, -1, 0)))
+	distance, color, res = p.FindIntersection(NewRay(NewVector(0, 1, 0), NewVector(0, -1, 0)))
 
 	if res != false || distance != 0.0 {
-		t.Errorf("TestPlaneFindIntersection2 %v %v %v %v", res, distance, ray, color)
+		t.Errorf("TestPlaneFindIntersection2 %v %v %v", res, distance, color)
 	}
 
-	distance, ray, color, res = p.RayIntersection(NewRay(NewVector(0, -1, 0), NewVector(0, -1, 0)))
+	distance, color, res = p.FindIntersection(NewRay(NewVector(0, -1, 0), NewVector(0, -1, 0)))
 
 	if res != true || distance != 1.0 {
-		t.Errorf("TestPlaneFindIntersection3 %v %v %v %v", res, distance, ray, color)
+		t.Errorf("TestPlaneFindIntersection3 %v %v %v", res, distance, color)
 	}
 }
