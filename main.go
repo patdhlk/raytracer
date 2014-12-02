@@ -1,6 +1,7 @@
 package main
 
 import "image/png"
+
 import "image/color"
 import "os"
 import "log"
@@ -65,12 +66,14 @@ outer:
 
 		isShadow := false
 		// is shadow?
-		for _, _item := range items {
-			_distance, _, _ := _item.FindIntersection(rayToLight)
+		for _index, _item := range items {
+			if itemBefore != _index {
+				_distance, _, _ := _item.FindIntersection(rayToLight)
 
-			if _distance > 0 {
-				isShadow = true
-				break
+				if _distance < 0 {
+					isShadow = true
+					break
+				}
 			}
 		}
 		if isShadow {
@@ -85,17 +88,17 @@ outer:
 		colorOfNextIntersectionItem, useThisColor := GetColorOfPixelInImage(redirectedRay, light, items, actualShortestInAllItems, recursionDeepness-1, reflectionStrength)
 		if useThisColor == false {
 			if isShadow {
-				//color.B = 0
-				//color.G = 0
-				//color.R = 0
+				color.B = 0
+				color.G = 0
+				color.R = 0
 			}
 			return color, true
 
 		} else {
 			if isShadow {
-				//color.B = 0
-				//color.G = 0
-				//color.R = 0
+				color.B = 0
+				color.G = 0
+				color.R = 0
 			}
 			return MergeColors(color, colorOfNextIntersectionItem, reflectionStrength), true
 		}

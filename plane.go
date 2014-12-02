@@ -1,7 +1,6 @@
 package main
 
 import "image/color"
-import "math"
 
 type Plane struct {
 	location        Vector
@@ -18,16 +17,19 @@ func (this Plane) FindIntersection(ray Ray) (float64, color.RGBA, bool) {
 		return 0, color.RGBA{0, 0, 0, 0}, false
 	}
 
-	reflectionRay := this.GetReflectionRay(ray, intersectionDistance)
-	locationOfIntersection := reflectionRay.origin
+	/*
+		reflectionRay := this.GetReflectionRay(ray, intersectionDistance)
+		locationOfIntersection := reflectionRay.origin
 
-	//Create chessboard by inverting plane color if x and y are both eval or odd
-	chessboardVector := locationOfIntersection.AddVector(this.location.Negative())
+		//Create chessboard by inverting plane color if x and y are both eval or odd
+		chessboardVector := locationOfIntersection.AddVector(this.location.Negative())
 
-	var returnColor color.RGBA = this.color
-	if math.Abs(math.Mod(float64(int(chessboardVector.x)), 2)) == 0 && math.Abs(math.Mod(float64(int(chessboardVector.y*correctionOfSquareChessboard)), 2)) == 0 || math.Abs(math.Mod(float64(int(chessboardVector.x)), 2)) == 1 && math.Abs(math.Mod(float64(int(chessboardVector.y*correctionOfSquareChessboard)), 2)) == 1 {
-		returnColor = color.RGBA{uint8(255 - this.color.R), uint8(255 - this.color.G), uint8(255 - this.color.B), uint8(255 - this.color.A)}
-	}
+		var returnColor color.RGBA = this.color
+		if math.Abs(math.Mod(float64(int(chessboardVector.x)), 2)) == 0 && math.Abs(math.Mod(float64(int(chessboardVector.y*correctionOfSquareChessboard)), 2)) == 0 || math.Abs(math.Mod(float64(int(chessboardVector.x)), 2)) == 1 && math.Abs(math.Mod(float64(int(chessboardVector.y*correctionOfSquareChessboard)), 2)) == 1 {
+			returnColor = color.RGBA{uint8(255 - this.color.R), uint8(255 - this.color.G), uint8(255 - this.color.B), uint8(255 - this.color.A)}
+		}
+	*/
+	returnColor := color.RGBA{255, 255, 255, 0}
 
 	return intersectionDistance, returnColor, true
 }
