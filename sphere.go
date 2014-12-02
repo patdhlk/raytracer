@@ -13,14 +13,14 @@ type Sphere struct {
 	color    color.RGBA
 }
 
-func (this Sphere) FindIntersection(ray Ray) (float64, color.RGBA, bool) {
+func (this Sphere) FindIntersection(ray Ray) (bool, float64) {
 	d := ray.origin.AddVector(this.location.Negative())
 
 	db := d.DotProduct(ray.direction)
 	discriminant := db*db + this.radius*this.radius - d.DotProduct(d)
 
 	if discriminant < 0 { //Value in square root negativ -> No intersection with ball
-		return 0, color.RGBA{0, 0, 0, 0}, false
+		return false, 0
 	}
 
 	t1 := -db + math.Sqrt(discriminant)
@@ -43,7 +43,7 @@ func (this Sphere) FindIntersection(ray Ray) (float64, color.RGBA, bool) {
 		}
 	}
 
-	return intersectionDistance, this.color, true
+	return true, intersectionDistance
 }
 
 func (this Sphere) GetNormalAt(point Vector) Vector {
@@ -51,7 +51,7 @@ func (this Sphere) GetNormalAt(point Vector) Vector {
 }
 
 func (this Sphere) GetReflectionRay(ray Ray, intersectionDistance float64) (Ray, error) {
-	_, _, intersect := this.FindIntersection(ray)
+	intersect, _ := this.FindIntersection(ray)
 	if intersect {
 		intersection := ray.origin.AddVector(ray.direction.MultiplyVector(intersectionDistance))
 		normal := intersection.AddVector(this.location.Negative())
@@ -60,6 +60,10 @@ func (this Sphere) GetReflectionRay(ray Ray, intersectionDistance float64) (Ray,
 	}
 	return NewRay(NewVector(0, 0, 0), NewVector(0, 0, 0)), errors.New("Not valid")
 
+}
+
+func (this Sphere) GetColor() color.RGBA {
+	return this.color
 }
 
 func NewSphere(location Vector, radius float64, color color.RGBA) Sphere {

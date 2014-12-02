@@ -1,0 +1,4 @@
+- Replace Eye --> Camera
+- Shadowing
+- Phong
+- Bug fixing: Plane

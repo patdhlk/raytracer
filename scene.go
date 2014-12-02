@@ -21,7 +21,7 @@ func NewDefaultScene() *Scene {
 
 	objects = append(objects, NewSphere(NewVector(4, 9, 14), 9.0, color.RGBA{200, 100, 0, 255}))
 	objects = append(objects, NewSphere(NewVector(25, 9, 10), 4.0, color.RGBA{50, 25, 80, 255}))
-	objects = append(objects, NewPlane(NewVector(0, -2, 3), NewVector(0, 8, 1), color.RGBA{0, 0, 0, 255}))
+	objects = append(objects, NewPlane(NewVector(0, -2, 3), NewVector(0, 8, 1), color.RGBA{80, 80, 80, 255}))
 
 	sc := Scene{eye, light, objects}
 	return &sc

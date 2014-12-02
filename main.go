@@ -36,7 +36,7 @@ outer:
 			continue outer
 		}
 
-		distance, _, intersection := item.FindIntersection(ray)
+		intersection, distance := item.FindIntersection(ray)
 
 		if intersection == false { //No intersection with item
 			continue outer
@@ -57,7 +57,8 @@ outer:
 	if intersectionWithAnyItem == false {
 		return color.RGBA{0, 0, 0, 0}, false
 	} else {
-		_distance, color, _ := items[actualShortestInAllItems].FindIntersection(ray) //Get detailed information of intersection item
+		_, _distance := items[actualShortestInAllItems].FindIntersection(ray) //Get detailed information of intersection item
+		color := items[actualShortestInAllItems].GetColor()
 
 		redirectedRay, _ := items[actualShortestInAllItems].GetReflectionRay(ray, _distance)
 
@@ -66,7 +67,7 @@ outer:
 		isShadow := false
 		for _index, _item := range items {
 			if itemBefore != _index {
-				_distance, _, _ := _item.FindIntersection(rayToLight)
+				_, _distance := _item.FindIntersection(rayToLight)
 
 				if _distance < 0 {
 					isShadow = true
@@ -76,6 +77,7 @@ outer:
 		}
 
 		p := Polyethylene{}
+
 		normal := items[actualShortestInAllItems].GetNormalAt(redirectedRay.origin)
 		brightness := CalcBrightness(255, ray.direction, rayToLight.direction.Normalize(), normal, redirectedRay.direction, p)
 

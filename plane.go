@@ -13,19 +13,18 @@ type Plane struct {
 
 var correctionOfSquareChessboard float64 = 4.0
 
-func (this Plane) FindIntersection(ray Ray) (float64, color.RGBA, bool) {
+func (this Plane) FindIntersection(ray Ray) (bool, float64) {
 	var intersectionDistance float64 = this.location.AddVector(ray.origin.Negative()).DotProduct(this.normalDirection) / ray.direction.DotProduct(this.normalDirection)
 
 	if intersectionDistance < 0 {
-		return 0, color.RGBA{255, 255, 255, 255}, false
+		return false, 0
 	}
-	returnColor := color.RGBA{80, 80, 80, 255}
 
-	return intersectionDistance, returnColor, true
+	return true, intersectionDistance
 }
 
 func (this Plane) GetReflectionRay(ray Ray, intersectionDistance float64) (Ray, error) {
-	_, _, intersect := this.FindIntersection(ray)
+	intersect, _ := this.FindIntersection(ray)
 	if intersect {
 		intersection := ray.origin.AddVector(ray.direction.MultiplyVector(intersectionDistance))
 		reflect := CalcReflecion(ray.direction, this.normalDirection)
@@ -36,6 +35,10 @@ func (this Plane) GetReflectionRay(ray Ray, intersectionDistance float64) (Ray, 
 
 func (this Plane) GetNormalAt(point Vector) Vector {
 	return this.normalDirection
+}
+
+func (this Plane) GetColor() color.RGBA {
+	return this.color
 }
 
 func NewPlane(location Vector, direction Vector, Color color.RGBA) Plane {

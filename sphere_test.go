@@ -12,10 +12,12 @@ func TestNewSphere(t *testing.T) {
 
 	r := 4.0
 
-	s := NewSphere(vec, r, color.RGBA{255, 255, 255, 0})
+	c := color.RGBA{255, 255, 255, 0}
 
-	if s.location.x != x || s.location.y != y || s.location.z != z || s.radius != r {
-		t.Errorf("TestNewSphere %v %v %v %v %v %v %v %v", x, y, z, r, s.location.x, s.location.y, s.location.z, s.radius)
+	s := NewSphere(vec, r, c)
+
+	if s.location.x != x || s.location.y != y || s.location.z != z || s.radius != r || s.GetColor() != c {
+		t.Errorf("TestNewSphere %v %v %v %v %v %v %v %v %v", x, y, z, r, s.location.x, s.location.y, s.location.z, s.radius, s.GetColor())
 	}
 }
 
@@ -23,10 +25,10 @@ func TestSphereFindIntersection(t *testing.T) {
 	c := color.RGBA{255, 255, 255, 0}
 	s := NewSphere(NewVector(0.0, 0.0, 0.0), 4.0, c)
 	r := NewRay(NewVector(0.0, 0.0, 0.0), NewVector(0.0, 0.0, 0.0))
-	distance, color, res := s.FindIntersection(r)
+	res, distance := s.FindIntersection(r)
 
 	if res != true || distance != 4.0 {
-		t.Errorf("TestSphereFindIntersection1 %v %v %v", res, distance, color)
+		t.Errorf("TestSphereFindIntersection1 %v %v", res, distance)
 	}
 
 	reflection, err := s.GetReflectionRay(r, 1)
@@ -37,10 +39,10 @@ func TestSphereFindIntersection(t *testing.T) {
 
 	s = NewSphere(NewVector(0.0, 0.0, 0.0), 4.0, c)
 	r = NewRay(NewVector(4.0, 0.0, 0.0), NewVector(0.0, 0.0, 0.0))
-	distance, color, res = s.FindIntersection(r)
+	res, distance = s.FindIntersection(r)
 
 	if res != true || distance != 0 {
-		t.Errorf("TestSphereFindIntersection2 %v %v %v", res, distance, color)
+		t.Errorf("TestSphereFindIntersection2 %v %v", res, distance)
 	}
 
 	reflection, err = s.GetReflectionRay(r, 1)
@@ -51,10 +53,10 @@ func TestSphereFindIntersection(t *testing.T) {
 
 	s = NewSphere(NewVector(0.0, 0.0, 0.0), 4.0, c)
 	r = NewRay(NewVector(3.0, 0.0, 0.0), NewVector(0.0, 0.0, 0.0))
-	distance, color, res = s.FindIntersection(r)
+	res, distance = s.FindIntersection(r)
 
 	if res != true || distance != math.Sqrt(7.0) {
-		t.Errorf("TestSphereFindIntersection3 %v %v %v", res, distance, color)
+		t.Errorf("TestSphereFindIntersection3 %v %v", res, distance)
 	}
 
 	reflection, err = s.GetReflectionRay(r, 1)
@@ -65,10 +67,10 @@ func TestSphereFindIntersection(t *testing.T) {
 
 	s = NewSphere(NewVector(0.0, 0.0, 0.0), 4.0, c)
 	r = NewRay(NewVector(5.0, 0.0, 0.0), NewVector(0.0, 1.0, 0.0))
-	distance, color, res = s.FindIntersection(r)
+	res, distance = s.FindIntersection(r)
 
 	if res != false || distance != math.Sqrt(0.0) {
-		t.Errorf("TestSphereFindIntersection4 %v %v %v", res, distance, color)
+		t.Errorf("TestSphereFindIntersection4 %v %v", res, distance)
 	}
 
 	reflection, err = s.GetReflectionRay(r, 1)
@@ -94,10 +96,4 @@ func TestSphereGetNormalAt(t *testing.T) {
 	if v != NewVector(0, 1, 0) {
 		t.Errorf("TestSphereGetNormalAt2 %v", v)
 	}
-}
-
-func TestSphereGetReflectionRay(t *testing.T) {
-	//s = NewSphere(*NewVector(0.0, 0.0, 0.0), 4.0, 0.0)
-
-	//
 }
