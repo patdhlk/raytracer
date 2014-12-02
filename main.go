@@ -82,8 +82,10 @@ outer:
 		// func CalcBrightness(in float64, b, L, N, V Vector, m Material, n float64) float64 {
 		// TO DO: L: Einheitsvektor in Richtung der Lichtquelle
 		// TO DO: N: Normale des scenceobject
-		//CalcBrightness(255, ray.direction, rayToLight.direction.Normalize(), nil, redirectedRay, Polyethylene, 20)
+		p := Polyethylene{}
+		brightness := CalcBrightness(255, ray.direction, rayToLight.direction.Normalize(), ray.direction.Normalize(), redirectedRay.direction, p)
 
+		//fmt.Println("brightness %v", brightness)
 		//Starting recursion,
 		colorOfNextIntersectionItem, useThisColor := GetColorOfPixelInImage(redirectedRay, light, items, actualShortestInAllItems, recursionDeepness-1, reflectionStrength)
 		if useThisColor == false {
@@ -91,7 +93,9 @@ outer:
 				color.B = 0
 				color.G = 0
 				color.R = 0
+
 			}
+			color.A = uint8(brightness)
 			return color, true
 
 		} else {
@@ -100,7 +104,10 @@ outer:
 				color.G = 0
 				color.R = 0
 			}
-			return MergeColors(color, colorOfNextIntersectionItem, reflectionStrength), true
+
+			color = MergeColors(color, colorOfNextIntersectionItem, reflectionStrength)
+			color.A = uint8(brightness)
+			return color, true
 		}
 	}
 }

@@ -52,6 +52,7 @@ func (this Sphere) GetReflectionRay(ray Ray, intersectionDistance float64) Ray {
 	reflect := CalcReflecion(ray.direction, normal)
 	return NewRay(locationOfIntersection, reflect)
 }
+
 func NewSphere(location Vector, radius float64, color color.RGBA) Sphere {
 	b := Sphere{radius, location, color}
 	return b
