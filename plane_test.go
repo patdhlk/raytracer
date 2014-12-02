@@ -30,13 +30,13 @@ func TestPlaneFindIntersection(t *testing.T) {
 
 	distance, color, res = p.FindIntersection(NewRay(NewVector(0, 1, 0), NewVector(0, -1, 0)))
 
-	if res != false || distance != 0.0 {
+	if res != true || distance != 1.0 {
 		t.Errorf("TestPlaneFindIntersection2 %v %v %v", res, distance, color)
 	}
 
 	distance, color, res = p.FindIntersection(NewRay(NewVector(0, -1, 0), NewVector(0, -1, 0)))
 
-	if res != true || distance != 1.0 {
+	if res != false || distance != 0.0 {
 		t.Errorf("TestPlaneFindIntersection3 %v %v %v", res, distance, color)
 	}
 }
@@ -64,14 +64,14 @@ func TestPlaneGetReflectionRay(t *testing.T) {
 	r := NewRay(NewVector(0, 1, 0), NewVector(0, -1, 0))
 	res, err := p.GetReflectionRay(r, 1)
 
-	if err == nil || res.origin != NewVector(0, 0, 0) || res.direction != NewVector(0, 0, 0) {
+	if err != nil || res.origin != NewVector(0, 0, 0) || res.direction != NewVector(0, 1, 0) {
 		t.Errorf("TestPlaneGetReflectionRay1 %v %v", res, err)
 	}
 
 	r = NewRay(NewVector(0, -1, 0), NewVector(0, -1, 0))
 	res, err = p.GetReflectionRay(r, 1)
 
-	if err != nil || res.origin != NewVector(0, -2, 0) || res.direction != NewVector(0, 1, 0) {
+	if err == nil || res.origin != NewVector(0, 0, 0) || res.direction != NewVector(0, 0, 0) {
 		t.Errorf("TestPlaneGetReflectionRay2 %v %v", res, err)
 	}
 }

@@ -14,12 +14,12 @@ type Plane struct {
 var correctionOfSquareChessboard float64 = 4.0
 
 func (this Plane) FindIntersection(ray Ray) (float64, color.RGBA, bool) {
-	var intersectionDistance float64 = ray.origin.AddVector(this.location.Negative()).DotProduct(this.normalDirection) / ray.direction.DotProduct(this.normalDirection)
+	var intersectionDistance float64 = this.location.AddVector(ray.origin.Negative()).DotProduct(this.normalDirection) / ray.direction.DotProduct(this.normalDirection)
 
 	if intersectionDistance < 0 {
-		return 0, color.RGBA{0, 0, 0, 0}, false
+		return 0, color.RGBA{255, 255, 255, 255}, false
 	}
-	returnColor := color.RGBA{255, 255, 255, 0}
+	returnColor := color.RGBA{80, 80, 80, 255}
 
 	return intersectionDistance, returnColor, true
 }

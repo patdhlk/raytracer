@@ -36,16 +36,16 @@ func TestSphereFindIntersection(t *testing.T) {
 	}
 
 	s = NewSphere(NewVector(0.0, 0.0, 0.0), 4.0, c)
-	r = NewRay(NewVector(2.0, 0.0, 0.0), NewVector(0.0, 0.0, 0.0))
+	r = NewRay(NewVector(4.0, 0.0, 0.0), NewVector(0.0, 0.0, 0.0))
 	distance, color, res = s.FindIntersection(r)
 
-	if res != true || distance != math.Sqrt(12.0) {
+	if res != true || distance != 0 {
 		t.Errorf("TestSphereFindIntersection2 %v %v %v", res, distance, color)
 	}
 
 	reflection, err = s.GetReflectionRay(r, 1)
 
-	if err != nil || reflection.origin != NewVector(2, 0, 0) || reflection.direction != NewVector(0, 0, 0) {
+	if err != nil || reflection.origin != NewVector(4, 0, 0) || reflection.direction != NewVector(0, 0, 0) {
 		t.Errorf("TestSphereFindIntersection ReflectionRay 2 %v %v", reflection, err)
 	}
 
