@@ -10,10 +10,7 @@ type Plane struct {
 }
 
 func (this Plane) RayIntersection(ray Ray) (float64, Ray, color.RGBA, bool) {
-	bDotN := ray.direction.DotProduct(this.normalDirection)   //Solution of bN
-	eMinusA := ray.origin.AddVector(this.location.Negative()) //Solution of (E-a)
-	eMinusAN := eMinusA.DotProduct(this.normalDirection)      //Solution of (E-a)N
-	var intersectionDistance float64 = eMinusAN / bDotN
+	var intersectionDistance float64 = ray.origin.AddVector(this.location.Negative()).DotProduct(this.normalDirection) / ray.direction.DotProduct(this.normalDirection)
 
 	if intersectionDistance < 0 {
 		return 0, ray, color.RGBA{0, 0, 0, 0}, false

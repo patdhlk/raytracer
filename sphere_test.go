@@ -2,6 +2,7 @@ package main
 
 import (
 	"image/color"
+	"math"
 	"testing"
 )
 
@@ -32,7 +33,7 @@ func TestFindIntersection(t *testing.T) {
 	r = NewRay(NewVector(2.0, 0.0, 0.0), NewVector(0.0, 0.0, 0.0))
 	distance, ray, color, res = s.RayIntersection(r)
 
-	if res != true || distance != 0.0 {
+	if res != true || distance != math.Sqrt(12.0) {
 		t.Errorf("TestfindIntersection2 %v %v %v %v", res, distance, ray, color)
 	}
 
@@ -40,7 +41,15 @@ func TestFindIntersection(t *testing.T) {
 	r = NewRay(NewVector(3.0, 0.0, 0.0), NewVector(0.0, 0.0, 0.0))
 	distance, ray, color, res = s.RayIntersection(r)
 
-	if res != false || distance != 0.0 {
+	if res != true || distance != math.Sqrt(7.0) {
+		t.Errorf("TestfindIntersection3 %v %v %v %v", res, distance, ray, color)
+	}
+
+	s = NewSphere(NewVector(0.0, 0.0, 0.0), 4.0, c)
+	r = NewRay(NewVector(5.0, 0.0, 0.0), NewVector(0.0, 1.0, 0.0))
+	distance, ray, color, res = s.RayIntersection(r)
+
+	if res != false || distance != math.Sqrt(0.0) {
 		t.Errorf("TestfindIntersection3 %v %v %v %v", res, distance, ray, color)
 	}
 }

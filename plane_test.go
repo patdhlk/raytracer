@@ -24,19 +24,19 @@ func TestPlaneFindIntersection(t *testing.T) {
 
 	distance, ray, color, res := p.RayIntersection(NewRay(NewVector(0, 0, 0), NewVector(0, -1, 0)))
 
-	if distance != 0.0 {
+	if res != true || distance != 0.0 {
 		t.Errorf("TestPlaneFindIntersection1 %v %v %v %v", res, distance, ray, color)
 	}
 
 	distance, ray, color, res = p.RayIntersection(NewRay(NewVector(0, 1, 0), NewVector(0, -1, 0)))
 
-	if distance != 1.0 {
+	if res != false || distance != 0.0 {
 		t.Errorf("TestPlaneFindIntersection2 %v %v %v %v", res, distance, ray, color)
 	}
 
 	distance, ray, color, res = p.RayIntersection(NewRay(NewVector(0, -1, 0), NewVector(0, -1, 0)))
 
-	if distance != -1.0 {
+	if res != true || distance != 1.0 {
 		t.Errorf("TestPlaneFindIntersection3 %v %v %v %v", res, distance, ray, color)
 	}
 }

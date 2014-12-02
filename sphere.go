@@ -1,6 +1,7 @@
 package main
 
 import "image/color"
+
 import "math"
 
 type Sphere struct {
@@ -19,23 +20,18 @@ func (this Sphere) RayIntersection(ray Ray) (float64, Ray, color.RGBA, bool) {
 		return 0, ray, color.RGBA{0, 0, 0, 0}, false
 	}
 
-	t1 := -dDotB + math.Sqrt(inSqrtPart)
-	t2 := -dDotB - math.Sqrt(inSqrtPart)
-
 	//Getting nearest of 2 possible intersections
 	var intersectionDistance float64
 
-	if t1 < 0 {
-		intersectionDistance = t2
+	if inSqrtPart == 0 {
+		intersectionDistance = -dDotB
 	} else {
-		if t2 < 0 {
+		t1 := -dDotB + math.Sqrt(inSqrtPart)
+		t2 := -dDotB - math.Sqrt(inSqrtPart)
+		if t1 < t2 {
 			intersectionDistance = t1
 		} else {
-			if t1 < t2 {
-				intersectionDistance = t1
-			} else {
-				intersectionDistance = t2
-			}
+			intersectionDistance = t2
 		}
 	}
 
