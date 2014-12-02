@@ -13,15 +13,15 @@ type Sphere struct {
 func (this Sphere) FindIntersection(ray Ray) (float64, color.RGBA, bool) {
 	d := ray.origin.AddVector(this.location.Negative())
 
-	dDotB := d.DotProduct(ray.direction) //Solution from db
-	inSqrtPart := dDotB*dDotB + this.radius*this.radius - d.DotProduct(d)
+	db := d.DotProduct(ray.direction)
+	discriminant := db*db + this.radius*this.radius - d.DotProduct(d)
 
-	if inSqrtPart < 0 { //Value in square root negativ -> No intersection with ball
+	if discriminant < 0 { //Value in square root negativ -> No intersection with ball
 		return 0, color.RGBA{0, 0, 0, 0}, false
 	}
 
-	t1 := -dDotB + math.Sqrt(inSqrtPart)
-	t2 := -dDotB - math.Sqrt(inSqrtPart)
+	t1 := -db + math.Sqrt(discriminant)
+	t2 := -db - math.Sqrt(discriminant)
 
 	//Getting nearest of 2 possible intersections
 	var intersectionDistance float64
@@ -44,11 +44,8 @@ func (this Sphere) FindIntersection(ray Ray) (float64, color.RGBA, bool) {
 }
 
 func (this Sphere) GetReflectionRay(ray Ray, intersectionDistance float64) Ray {
-	locationOfIntersection := ray.origin.AddVector(ray.direction.MultiplyVector(intersectionDistance))
-
-	normal := locationOfIntersection.AddVector(this.location.Negative())
-	//normal = Vector{-normal.x, -normal.y, normal.z} //Adjust x and y of normal
-
+	intersection := ray.origin.AddVector(ray.direction.MultiplyVector(intersectionDistance))
+	normal := intersection.AddVector(this.location.Negative())
 	reflect := CalcReflecion(ray.direction, normal)
 	return NewRay(locationOfIntersection, reflect)
 }
