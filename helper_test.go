@@ -33,4 +33,22 @@ func TestMergeColors(t *testing.T) {
 	if res.R != 75 || res.G != 150 || res.B != 125 || res.A != 200 {
 		t.Errorf("TestMergeColors 2 %v", res)
 	}
+
+	c1 = color.RGBA{100, 200, 100, 200}
+	c2 = color.RGBA{50, 100, 150, 200}
+
+	res = MergeColors(c1, c2, -1)
+
+	if res.R != 100 || res.G != 200 || res.B != 100 || res.A != 200 {
+		t.Errorf("TestMergeColors 3 %v", res)
+	}
+
+	c1 = color.RGBA{100, 200, 100, 200}
+	c2 = color.RGBA{50, 100, 150, 200}
+
+	res = MergeColors(c1, c2, 1.1)
+
+	if res.R != 100 || res.G != 200 || res.B != 100 || res.A != 200 {
+		t.Errorf("TestMergeColors 3 %v", res)
+	}
 }
