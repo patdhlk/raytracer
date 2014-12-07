@@ -23,7 +23,7 @@ func NewScene(eye *objects.Vector, grid *Grid) *Scene {
 	if grid.TopLeft().X() != grid.BottomRight().X() {
 		panic("not same x values on corners")
 	}
-	var tmp = new(Scene)
+	tmp := new(Scene)
 	tmp.SetEye(eye)
 	tmp.SetGrid(grid)
 	tmp.SetElements(make([]SceneObject, 0, 0))
@@ -127,8 +127,8 @@ func (p *Scene) followRay(position *objects.Vector,
 func (p *Scene) checkInShadow(intersectPos *objects.Vector,
 	directionToLight *objects.Vector,
 	intersectObject SceneObject) bool {
-	var Ray = objects.NewRay(intersectPos, directionToLight)
-	var _, pos, _, _, _, _, _, _, _ = p.intersectAll(Ray, intersectObject)
+	Ray := objects.NewRay(intersectPos, directionToLight)
+	_, pos, _, _, _, _, _, _, _ := p.intersectAll(Ray, intersectObject)
 	return pos != nil
 }
 
@@ -140,16 +140,16 @@ func (p *Scene) calcPhong(intersectObject SceneObject,
 	phongColor = p.ambient
 	phongSpecular = objects.NewVector(0.0, 0.0, 0.0)
 
-	var directionToLight = p.light.GetPosition().Sub(intersectPos).Normalized()
+	directionToLight := p.light.GetPosition().Sub(intersectPos).Normalized()
 	if !p.checkInShadow(intersectPos, directionToLight, intersectObject) {
 
-		var directionFromLight = directionToLight.MulVal(-1)
+		directionFromLight := directionToLight.MulVal(-1)
 		normal = normal.Normalized()
-		var phongDiffuse = p.light.GetColor().MulVal(diffuse*directionToLight.Dot(normal)).Limit(0, 1)
+		phongDiffuse := p.light.GetColor().MulVal(diffuse*directionToLight.Dot(normal)).Limit(0, 1)
 
-		var directionLightOut = directionFromLight.Reflect(normal).Normalized()
-		var directionIntersectEye = ray.Origin().Sub(intersectPos).Normalized()
-		var specularAmount = directionLightOut.Dot(directionIntersectEye)
+		directionLightOut := directionFromLight.Reflect(normal).Normalized()
+		directionIntersectEye := ray.Origin().Sub(intersectPos).Normalized()
+		specularAmount := directionLightOut.Dot(directionIntersectEye)
 		if specularAmount < 0 {
 			specularAmount = 0
 		}
