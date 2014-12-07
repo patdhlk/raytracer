@@ -8,6 +8,8 @@ import (
 	"math"
 )
 
+var global = 0.25
+
 type Scene struct {
 	eye      *objects.Vector
 	grid     *Grid
@@ -16,8 +18,6 @@ type Scene struct {
 	skyColor *objects.Vector
 	light    *Light
 }
-
-var global = 0.25
 
 func NewScene(eye *objects.Vector, grid *Grid) *Scene {
 	if grid.TopLeft().X() != grid.BottomRight().X() {
@@ -58,10 +58,10 @@ func (p *Scene) Render(x, y int, superSample int) image.Image {
 			tmp_img[i][j] = *color
 		}
 	}
-	return scaleDown(tmp_img, tmp_x, tmp_y, superSample)
+	return scale(tmp_img, tmp_x, tmp_y, superSample)
 }
 
-func scaleDown(in [][]objects.Vector, size_x, size_y, factor int) *image.RGBA {
+func scale(in [][]objects.Vector, size_x, size_y, factor int) *image.RGBA {
 	var out = image.NewRGBA(image.Rect(0, 0, size_x/factor, size_y/factor))
 
 	for i := 0; i < size_x; i += factor {
@@ -122,18 +122,15 @@ func (p *Scene) followRay(position, direction *objects.Vector, ignored SceneObje
 	return color, intersectPos
 }
 
-func (p *Scene) checkInShadow(intersectPos *objects.Vector,
-	directionToLight *objects.Vector,
-	intersectObject SceneObject) bool {
-	Ray := objects.NewRay(intersectPos, directionToLight)
-	_, pos, _, _, _, _, _, _, _ := p.intersectAll(Ray, intersectObject)
+func (p *Scene) checkInShadow(intersectPos, directionToLight *objects.Vector, intersectObject SceneObject) bool {
+	r := objects.NewRay(intersectPos, directionToLight)
+	_, pos, _, _, _, _, _, _, _ := p.intersectAll(r, intersectObject)
 	return pos != nil
 }
 
-func (p *Scene) calcPhong(intersectObject SceneObject,
-	intersectPos *objects.Vector, ray *objects.Ray, normal *objects.Vector,
+func (p *Scene) calcPhong(intersectObject SceneObject, intersectPos *objects.Vector, ray *objects.Ray, normal *objects.Vector,
 	diffuse float64, specularIntensity float64,
-	specularPower float64) (phongColor *objects.Vector, phongSpecular *objects.Vector) {
+	specularPower float64) (phongColor, phongSpecular *objects.Vector) {
 
 	phongColor = p.ambient
 	phongSpecular = objects.NewVector(0.0, 0.0, 0.0)
@@ -159,9 +156,9 @@ func (p *Scene) calcPhong(intersectObject SceneObject,
 }
 
 func (p *Scene) intersectAll(Ray *objects.Ray, ignored SceneObject) (intersectObject SceneObject,
-	intersectPos *objects.Vector, color *objects.Vector, normal *objects.Vector,
-	diffuse float64, specularIntensity float64, specularPower float64,
-	reflectivity float64, nearestDist float64) {
+	intersectPos, color, normal *objects.Vector,
+	diffuse, specularIntensity, specularPower,
+	reflectivity, nearestDist float64) {
 
 	nearestDist = math.Inf(1)
 	for _, element := range p.elements {

@@ -1,8 +1,8 @@
 package scene
 
 import (
+	"de/vorlesung/projekt/raytracer/Helper"
 	objects "de/vorlesung/projekt/raytracer/SceneObjects"
-	"math"
 )
 
 type Surface struct {
@@ -33,31 +33,17 @@ func (p *Surface) Intersection(line *objects.Ray) (position *objects.Vector,
 
 func (p *Surface) getTextureColor(position *objects.Vector) *objects.Vector {
 	position = position.Abs()
-	var intVal1 = round(position.X(), 0)
-	var intVal2 = round(position.Y(), 0)
-	var intVal3 = round(position.Z(), 0)
+	var intVal1 = Helper.Round(position.X(), 0)
+	var intVal2 = Helper.Round(position.Y(), 0)
+	var intVal3 = Helper.Round(position.Z(), 0)
 	if int(intVal1+intVal2+intVal3)%2 == 0 {
 		return objects.NewVector(0.0, 0.0, 0.0)
 	}
 	return objects.NewVector(1.0, 1.0, 1.0)
 }
 
-func round(val float64, places int) (newVal float64) {
-	var round float64
-	pow := math.Pow(10, float64(places))
-	digit := pow * val
-	_, div := math.Modf(digit)
-	if div >= 0.5 {
-		round = math.Ceil(digit)
-	} else {
-		round = math.Floor(digit)
-	}
-	newVal = round / pow
-	return
-}
-
-func NewSurface(plane *objects.Plane, color *objects.Vector, diffuse float64,
-	specularIntensity float64, specularPower float64,
+func NewSurface(plane *objects.Plane, color *objects.Vector, diffuse,
+	specularIntensity, specularPower,
 	reflectivity float64) *Surface {
 	var tmp = new(Surface)
 	tmp.SetPlane(plane)
