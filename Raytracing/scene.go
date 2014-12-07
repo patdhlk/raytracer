@@ -32,23 +32,23 @@ func NewScene(eye *objects.Vector, grid *Grid) *Scene {
 	return tmp
 }
 
-func (p *Scene) Render(x int, y int, superSample int) image.Image {
+func (p *Scene) Render(x, y int, superSample int) image.Image {
 	log.Println("Start rendering (function) Image\n")
-	var tmp_x = x * superSample
-	var tmp_y = y * superSample
-	var tmp_img = make([][]objects.Vector, tmp_x)
+	tmp_x := x * superSample
+	tmp_y := y * superSample
+	tmp_img := make([][]objects.Vector, tmp_x)
 
-	var rasterStart = p.grid.TopLeft()
-	var rasterSizeZ = math.Abs(rasterStart.Z()-p.grid.BottomRight().Z()) / float64(tmp_x)
-	var rasterSizeY = -math.Abs(rasterStart.Y()-p.grid.BottomRight().Y()) / float64(tmp_y)
+	rasterStart := p.grid.TopLeft()
+	rasterSizeZ := math.Abs(rasterStart.Z()-p.grid.BottomRight().Z()) / float64(tmp_x)
+	rasterSizeY := -math.Abs(rasterStart.Y()-p.grid.BottomRight().Y()) / float64(tmp_y)
 
 	for i := 0; i < tmp_x; i++ {
 		tmp_img[i] = make([]objects.Vector, tmp_y)
 		for j := 0; j < tmp_y; j++ {
 
-			var posZ = rasterStart.Z() + (float64(i)+0.5)*rasterSizeZ
-			var posY = rasterStart.Y() + (float64(j)+0.5)*rasterSizeY
-			var gridPos = objects.NewVector(rasterStart.X(), posY, posZ)
+			posZ := rasterStart.Z() + (float64(i)+0.5)*rasterSizeZ
+			posY := rasterStart.Y() + (float64(j)+0.5)*rasterSizeY
+			gridPos := objects.NewVector(rasterStart.X(), posY, posZ)
 
 			var color, _ = p.followRay(p.eye, gridPos.Sub(p.eye), nil, 8)
 			if color == nil {
@@ -61,7 +61,7 @@ func (p *Scene) Render(x int, y int, superSample int) image.Image {
 	return scaleDown(tmp_img, tmp_x, tmp_y, superSample)
 }
 
-func scaleDown(in [][]objects.Vector, size_x int, size_y int, factor int) *image.RGBA {
+func scaleDown(in [][]objects.Vector, size_x, size_y, factor int) *image.RGBA {
 	var out = image.NewRGBA(image.Rect(0, 0, size_x/factor, size_y/factor))
 
 	for i := 0; i < size_x; i += factor {
@@ -85,9 +85,7 @@ func scaleDown(in [][]objects.Vector, size_x int, size_y int, factor int) *image
 	return out
 }
 
-func (p *Scene) followRay(position *objects.Vector,
-	direction *objects.Vector, ignored SceneObject,
-	depthLeft uint8) (*objects.Vector, *objects.Vector) {
+func (p *Scene) followRay(position, direction *objects.Vector, ignored SceneObject, depthLeft uint8) (*objects.Vector, *objects.Vector) {
 	var Ray = objects.NewRay(position, direction)
 
 	var intersectObject, intersectPos, color, normal, diffuse, specularIntensity, specularPower, reflectivity, nearestDist = p.intersectAll(Ray, ignored)
@@ -140,12 +138,12 @@ func (p *Scene) calcPhong(intersectObject SceneObject,
 	phongColor = p.ambient
 	phongSpecular = objects.NewVector(0.0, 0.0, 0.0)
 
-	directionToLight := p.light.GetPosition().Sub(intersectPos).Normalized()
+	directionToLight := p.light.Position().Sub(intersectPos).Normalized()
 	if !p.checkInShadow(intersectPos, directionToLight, intersectObject) {
 
 		directionFromLight := directionToLight.MulVal(-1)
 		normal = normal.Normalized()
-		phongDiffuse := p.light.GetColor().MulVal(diffuse*directionToLight.Dot(normal)).Limit(0, 1)
+		phongDiffuse := p.light.Color().MulVal(diffuse*directionToLight.Dot(normal)).Limit(0, 1)
 
 		directionLightOut := directionFromLight.Reflect(normal).Normalized()
 		directionIntersectEye := ray.Origin().Sub(intersectPos).Normalized()
@@ -153,7 +151,7 @@ func (p *Scene) calcPhong(intersectObject SceneObject,
 		if specularAmount < 0 {
 			specularAmount = 0
 		}
-		phongSpecular = p.light.GetColor().MulVal(specularIntensity*math.Pow(specularAmount, specularPower)).Limit(0, 1)
+		phongSpecular = p.light.Color().MulVal(specularIntensity*math.Pow(specularAmount, specularPower)).Limit(0, 1)
 
 		phongColor = phongColor.Add(phongDiffuse).Limit(0, 1)
 	}

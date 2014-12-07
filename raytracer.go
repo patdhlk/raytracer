@@ -30,7 +30,7 @@ func main() {
 	currentScene.SetAmbient(objects.NewVector(0.25, 0.25, 0.3))
 	currentScene.SetLight(scene.NewLight(objects.NewVector(1.0, 4.0, 0.5), objects.NewVector(1.0, 1.0, 1.0)))
 	currentScene.SetSkyColor(objects.NewVector(0.85, 0.85, 0.95))
-
+	//get better result with 3 or 4 instead of 1
 	i := currentScene.Render(width, height, 1)
 	h.ImageWriter(filename, i)
 }

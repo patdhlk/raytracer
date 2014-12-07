@@ -10,15 +10,8 @@ type Vector struct {
 	z float64
 }
 
-func (p *Vector) X() float64     { return p.x }
-func (p *Vector) Y() float64     { return p.y }
-func (p *Vector) Z() float64     { return p.z }
-func (p *Vector) SetX(x float64) { p.x = x }
-func (p *Vector) SetY(y float64) { p.y = y }
-func (p *Vector) SetZ(z float64) { p.z = z }
-
-func (p *Vector) Length() float64 {
-	return math.Sqrt(math.Pow(p.x, 2) + math.Pow(p.y, 2) + math.Pow(p.z, 2))
+func (this *Vector) Length() float64 {
+	return math.Sqrt(math.Pow(this.X(), 2) + math.Pow(this.Y(), 2) + math.Pow(this.Z(), 2))
 }
 
 func LimitFloat64(value float64, min float64, max float64) float64 {
@@ -31,120 +24,127 @@ func LimitFloat64(value float64, min float64, max float64) float64 {
 	return value
 }
 
-func (p *Vector) Limit(min float64, max float64) *Vector {
-	var tmp_x = LimitFloat64(p.x, min, max)
-	var tmp_y = LimitFloat64(p.y, min, max)
-	var tmp_z = LimitFloat64(p.z, min, max)
+func (this *Vector) Limit(min float64, max float64) *Vector {
+	var tmthis_x = LimitFloat64(this.X(), min, max)
+	var tmthis_y = LimitFloat64(this.Y(), min, max)
+	var tmthis_z = LimitFloat64(this.Z(), min, max)
 
-	return NewVector(tmp_x, tmp_y, tmp_z)
+	return NewVector(tmthis_x, tmthis_y, tmthis_z)
 }
 
-func (p *Vector) Max() float64 {
-	return math.Max(p.x, math.Max(p.y, p.z))
+func (this *Vector) Max() float64 {
+	return math.Max(this.X(), math.Max(this.Y(), this.Z()))
 }
 
-func (p *Vector) Abs() *Vector {
-	var tmp_x = math.Abs(p.x)
-	var tmp_y = math.Abs(p.y)
-	var tmp_z = math.Abs(p.z)
-	return NewVector(tmp_x, tmp_y, tmp_z)
+func (this *Vector) Abs() *Vector {
+	var tmthis_x = math.Abs(this.X())
+	var tmthis_y = math.Abs(this.Y())
+	var tmthis_z = math.Abs(this.Z())
+	return NewVector(tmthis_x, tmthis_y, tmthis_z)
 }
 
-func (p *Vector) Normalized() *Vector {
-	var len = p.Length()
-	var tmp_x = p.x / len
-	var tmp_y = p.y / len
-	var tmp_z = p.z / len
-	return NewVector(tmp_x, tmp_y, tmp_z)
+func (this *Vector) Normalized() *Vector {
+	var len = this.Length()
+	var tmthis_x = this.X() / len
+	var tmthis_y = this.Y() / len
+	var tmthis_z = this.Z() / len
+	return NewVector(tmthis_x, tmthis_y, tmthis_z)
 }
 
-func (p *Vector) Dot(o *Vector) float64 {
-	return p.x*o.x + p.y*o.y + p.z*o.z
+func (this *Vector) Dot(o *Vector) float64 {
+	return this.X()*o.X() + this.Y()*o.Y() + this.Z()*o.Z()
 }
 
-func (p *Vector) Cross(o *Vector) *Vector {
-	var tmp_x = p.y*o.z - p.z*o.y
-	var tmp_y = p.z*o.x - p.x*o.z
-	var tmp_z = p.x*o.y - p.y*o.x
-	return NewVector(tmp_x, tmp_y, tmp_z)
+func (this *Vector) Cross(o *Vector) *Vector {
+	tmthis_x := this.Y()*o.Z() - this.Z()*o.Y()
+	tmthis_y := this.Z()*o.X() - this.X()*o.Z()
+	tmthis_z := this.X()*o.Y() - this.Y()*o.X()
+	return NewVector(tmthis_x, tmthis_y, tmthis_z)
 }
 
-func (p *Vector) Reflect(normal *Vector) *Vector {
-	var p_tmp = p.Normalized()
-	var n_tmp = normal.Normalized()
-	return p_tmp.Sub(n_tmp.MulVal(2 * p_tmp.Dot(n_tmp)))
+func (this *Vector) Reflect(normal *Vector) *Vector {
+	var this_tmthis = this.Normalized()
+	var n_tmthis = normal.Normalized()
+	return this_tmthis.Sub(n_tmthis.MulVal(2 * this_tmthis.Dot(n_tmthis)))
 }
 
-func (p *Vector) Add(o *Vector) *Vector {
-	var tmp_x = p.x + o.x
-	var tmp_y = p.y + o.y
-	var tmp_z = p.z + o.z
-	return NewVector(tmp_x, tmp_y, tmp_z)
+func (this *Vector) Add(o *Vector) *Vector {
+	var tmthis_x = this.X() + o.X()
+	var tmthis_y = this.Y() + o.Y()
+	var tmthis_z = this.Z() + o.Z()
+	return NewVector(tmthis_x, tmthis_y, tmthis_z)
 }
 
-func (p *Vector) AddVal(o float64) *Vector {
-	var tmp_x = p.x + o
-	var tmp_y = p.y + o
-	var tmp_z = p.z + o
-	return NewVector(tmp_x, tmp_y, tmp_z)
+func (this *Vector) AddVal(o float64) *Vector {
+	var tmthis_x = this.X() + o
+	var tmthis_y = this.Y() + o
+	var tmthis_z = this.Z() + o
+	return NewVector(tmthis_x, tmthis_y, tmthis_z)
 }
 
-func (p *Vector) Sub(o *Vector) *Vector {
-	var tmp_x = p.x - o.x
-	var tmp_y = p.y - o.y
-	var tmp_z = p.z - o.z
-	return NewVector(tmp_x, tmp_y, tmp_z)
+func (this *Vector) Sub(o *Vector) *Vector {
+	var tmthis_x = this.X() - o.X()
+	var tmthis_y = this.Y() - o.Y()
+	var tmthis_z = this.Z() - o.Z()
+	return NewVector(tmthis_x, tmthis_y, tmthis_z)
 }
 
-func (p *Vector) SubVal(o float64) *Vector {
-	var tmp_x = p.x - o
-	var tmp_y = p.y - o
-	var tmp_z = p.z - o
-	return NewVector(tmp_x, tmp_y, tmp_z)
+func (this *Vector) SubVal(o float64) *Vector {
+	var tmthis_x = this.X() - o
+	var tmthis_y = this.Y() - o
+	var tmthis_z = this.Z() - o
+	return NewVector(tmthis_x, tmthis_y, tmthis_z)
 }
 
-func (p *Vector) Mul(o *Vector) *Vector {
-	var tmp_x = p.x * o.x
-	var tmp_y = p.y * o.y
-	var tmp_z = p.z * o.z
-	return NewVector(tmp_x, tmp_y, tmp_z)
+func (this *Vector) Mul(o *Vector) *Vector {
+	var tmthis_x = this.X() * o.X()
+	var tmthis_y = this.Y() * o.Y()
+	var tmthis_z = this.Z() * o.Z()
+	return NewVector(tmthis_x, tmthis_y, tmthis_z)
 }
 
-func (p *Vector) MulVal(o float64) *Vector {
-	var tmp_x = p.x * o
-	var tmp_y = p.y * o
-	var tmp_z = p.z * o
-	return NewVector(tmp_x, tmp_y, tmp_z)
+func (this *Vector) MulVal(o float64) *Vector {
+	var tmthis_x = this.X() * o
+	var tmthis_y = this.Y() * o
+	var tmthis_z = this.Z() * o
+	return NewVector(tmthis_x, tmthis_y, tmthis_z)
 }
 
-func (p *Vector) Div(o *Vector) *Vector {
-	var tmp_x = p.x / o.x
-	var tmp_y = p.y / o.y
-	var tmp_z = p.z / o.z
-	return NewVector(tmp_x, tmp_y, tmp_z)
+func (this *Vector) Div(o *Vector) *Vector {
+	var tmthis_x = this.X() / o.X()
+	var tmthis_y = this.Y() / o.Y()
+	var tmthis_z = this.Z() / o.Z()
+	return NewVector(tmthis_x, tmthis_y, tmthis_z)
 }
 
-func (p *Vector) DivVal(o float64) *Vector {
-	var tmp_x = p.x / o
-	var tmp_y = p.y / o
-	var tmp_z = p.z / o
-	return NewVector(tmp_x, tmp_y, tmp_z)
+func (this *Vector) DivVal(o float64) *Vector {
+	var tmthis_x = this.X() / o
+	var tmthis_y = this.Y() / o
+	var tmthis_z = this.Z() / o
+	return NewVector(tmthis_x, tmthis_y, tmthis_z)
 }
 
-func (p *Vector) FindClosest(p1 *Vector, p2 *Vector) *Vector {
-	var dst1 = p.Sub(p1).Length()
-	var dst2 = p.Sub(p2).Length()
+func (this *Vector) FindClosest(this1 *Vector, this2 *Vector) *Vector {
+	var dst1 = this.Sub(this1).Length()
+	var dst2 = this.Sub(this2).Length()
 	if dst1 < dst2 {
-		return p1
+		return this1
 	} else {
-		return p2
+		return this2
 	}
 }
 
 func NewVector(x float64, y float64, z float64) *Vector {
-	var tmp = new(Vector)
-	tmp.SetX(x)
-	tmp.SetY(y)
-	tmp.SetZ(z)
-	return tmp
+	var tmthis = new(Vector)
+	tmthis.SetX(x)
+	tmthis.SetY(y)
+	tmthis.SetZ(z)
+	return tmthis
 }
+
+func (this *Vector) X() float64     { return this.x }
+func (this *Vector) Y() float64     { return this.y }
+func (this *Vector) Z() float64     { return this.z }
+func (this *Vector) SetX(x float64) { this.x = x }
+func (this *Vector) SetY(y float64) { this.y = y }
+func (this *Vector) SetZ(z float64) { this.z = z }
