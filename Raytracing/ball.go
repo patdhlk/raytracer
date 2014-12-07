@@ -13,25 +13,25 @@ type Ball struct {
 	reflectivity      float64
 }
 
-func (p *Ball) Intersection(line *objects.Ray) (position *objects.Vector, color *objects.Vector,
-	normal *objects.Vector, diffuse float64,
-	specularIntensity float64, specularPower float64, reflectivity float64) {
+func (p *Ball) Intersection(line *objects.Ray) (position, color,
+	normal *objects.Vector, diffuse,
+	specularIntensity, specularPower, reflectivity float64) {
 
 	position = p.sphere.Intersection(line)
 	if position == nil {
 		return
 	}
-	color = p.color
-	normal = position.Sub(p.sphere.GetPosition())
-	diffuse = p.diffuse
-	specularIntensity = p.specularIntensity
-	specularPower = p.specularPower
-	reflectivity = p.reflectivity
+	color = p.Color()
+	normal = position.Sub(p.Sphere().GetPosition())
+	diffuse = p.Diffuse()
+	specularIntensity = p.SpecularIntensity()
+	specularPower = p.SpecularPower()
+	reflectivity = p.Reflectivity()
 	return
 }
 
 func NewBall(sphere *objects.Sphere, color *objects.Vector,
-	diffuse float64, specularIntensity float64, specularPower float64,
+	diffuse, specularIntensity, specularPower,
 	reflectivity float64) *Ball {
 	tmp := new(Ball)
 	tmp.SetSphere(sphere)

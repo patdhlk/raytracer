@@ -6,9 +6,11 @@ import (
 	objects "de/vorlesung/projekt/raytracer/SceneObjects"
 	"log"
 	"os"
+	"time"
 )
 
 func main() {
+
 	h := new(Helper.Helper)
 	width := 640
 	height := 480
@@ -31,8 +33,11 @@ func main() {
 	currentScene.SetLight(scene.NewLight(objects.NewVector(1.0, 4.0, 0.5), objects.NewVector(1.0, 1.0, 1.0)))
 	currentScene.SetSkyColor(objects.NewVector(0.85, 0.85, 0.95))
 
+	//benchmark
+	t1 := time.Now()
 	//get better result with 3 or 4 instead of 1
 	//i := currentScene.Render(width, height, 5)
 	i := currentScene.Render(width, height, 1)
+	log.Println("Rendering time: ", time.Since(t1))
 	h.ImageWriter(filename, i)
 }

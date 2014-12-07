@@ -1,4 +1,7 @@
-- Replace Eye --> Camera
-- Shadowing
-- Phong
-- Bug fixing: Plane
+- Replace Eye --> Camera fixed	
+- Shadowing fixed
+- Phong fixed
+- Bug fixing: Plane fixed
+
+## new
+- testfunctions

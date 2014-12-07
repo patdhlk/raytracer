@@ -14,9 +14,9 @@ type Surface struct {
 	reflectivity      float64
 }
 
-func (p *Surface) Intersection(line *objects.Ray) (position *objects.Vector,
-	color *objects.Vector, normal *objects.Vector, diffuse float64,
-	specularIntensity float64, specularPower float64, reflectivity float64) {
+func (p *Surface) Intersection(line *objects.Ray) (position,
+	color, normal *objects.Vector, diffuse,
+	specularIntensity, specularPower, reflectivity float64) {
 
 	position = p.plane.Intersection(line)
 	if position == nil {
