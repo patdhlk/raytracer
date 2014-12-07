@@ -1,6 +1,8 @@
 package scene
 
-import "de/vorlesung/projekt/raytracer/SceneObjects"
+import (
+	objects "de/vorlesung/projekt/raytracer/SceneObjects"
+)
 
 type Grid struct {
 	top_left     *objects.Vector

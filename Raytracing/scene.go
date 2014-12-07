@@ -1,7 +1,7 @@
 package scene
 
 import (
-	"de/vorlesung/projekt/raytracer/SceneObjects"
+	objects "de/vorlesung/projekt/raytracer/SceneObjects"
 	"image"
 	imageColor "image/color"
 	"log"

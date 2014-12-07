@@ -1,6 +1,8 @@
 package scene
 
-import "de/vorlesung/projekt/raytracer/SceneObjects"
+import (
+	objects "de/vorlesung/projekt/raytracer/SceneObjects"
+)
 
 type Light struct {
 	position *objects.Vector
