@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+//the raytracer main method
 func main() {
 	numcpu := runtime.NumCPU()
 	runtime.GOMAXPROCS(numcpu)

@@ -87,6 +87,7 @@ func scale(in [][]objects.Vector, size_x, size_y, factor int) *image.RGBA {
 			var tmpVal = objects.NewVector(0.0, 0.0, 0.0)
 			for k := 0; k < factor; k++ {
 				for l := 0; l < factor; l++ {
+					//race condition
 					tmpVal = tmpVal.AddVector(&in[i+k][j+l])
 				}
 			}

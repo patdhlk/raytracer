@@ -4,6 +4,7 @@ import (
 	objects "de/vorlesung/projekt/raytracer/SceneObjects"
 )
 
+//a ball implementation
 type Ball struct {
 	sphere            *objects.Sphere
 	color             *objects.Vector
@@ -13,6 +14,8 @@ type Ball struct {
 	reflectivity      float64
 }
 
+//intersection between a ball and a ray, returns the intersection poisition,
+//the color of the intersecting object (also a vector x=r, y=bg, z=b), and more
 func (p *Ball) Intersection(line *objects.Ray) (position, color,
 	normal *objects.Vector, diffuse,
 	specularIntensity, specularPower, reflectivity float64) {
@@ -30,6 +33,7 @@ func (p *Ball) Intersection(line *objects.Ray) (position, color,
 	return
 }
 
+//creates a new instance of a ball
 func NewBall(sphere *objects.Sphere, color *objects.Vector,
 	diffuse, specularIntensity, specularPower,
 	reflectivity float64) *Ball {
@@ -43,17 +47,42 @@ func NewBall(sphere *objects.Sphere, color *objects.Vector,
 	return tmp
 }
 
-func (p *Ball) Sphere() *objects.Sphere          { return p.sphere }
-func (p *Ball) Color() *objects.Vector           { return p.color }
-func (p *Ball) Diffuse() float64                 { return p.diffuse }
-func (p *Ball) SpecularIntensity() float64       { return p.specularIntensity }
-func (p *Ball) SpecularPower() float64           { return p.specularPower }
-func (p *Ball) Reflectivity() float64            { return p.reflectivity }
+//Getters and Setters
+
+//returns the sphere
+func (p *Ball) Sphere() *objects.Sphere { return p.sphere }
+
+//returns the color of the ball, a vector
+func (p *Ball) Color() *objects.Vector { return p.color }
+
+//returns the diffuse value
+func (p *Ball) Diffuse() float64 { return p.diffuse }
+
+//returns the intensity value
+func (p *Ball) SpecularIntensity() float64 { return p.specularIntensity }
+
+//returns the power
+func (p *Ball) SpecularPower() float64 { return p.specularPower }
+
+//returns the reflectivity
+func (p *Ball) Reflectivity() float64 { return p.reflectivity }
+
+//sets the sphere
 func (p *Ball) SetSphere(sphere *objects.Sphere) { p.sphere = sphere }
-func (p *Ball) SetColor(color *objects.Vector)   { p.color = color }
-func (p *Ball) SetDiffuse(diffuse float64)       { p.diffuse = diffuse }
+
+//sets the color of the ball
+func (p *Ball) SetColor(color *objects.Vector) { p.color = color }
+
+//sets the diffuse value
+func (p *Ball) SetDiffuse(diffuse float64) { p.diffuse = diffuse }
+
+//sets the intensity
 func (p *Ball) SetSpecularIntensity(specularIntensity float64) {
 	p.specularIntensity = specularIntensity
 }
+
+//sets the power
 func (p *Ball) SetSpecularPower(specularPower float64) { p.specularPower = specularPower }
-func (p *Ball) SetReflectivity(reflectivity float64)   { p.reflectivity = reflectivity }
+
+//sets the reflection
+func (p *Ball) SetReflectivity(reflectivity float64) { p.reflectivity = reflectivity }
