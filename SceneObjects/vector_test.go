@@ -5,10 +5,57 @@ import (
 	"testing"
 )
 
+func TestNewVector(t *testing.T) {
+	x, y, z := 1.0, 2.0, 3.0
+	v := NewVector(x, y, z)
+
+	if v.x != 1.0 || v.y != 2.0 || v.z != 3.0 {
+		t.Errorf("TestNewVector %v %v %v %v %v %v", 1.0, 2.0, 3.0, v.x, v.y, v.z)
+	}
+}
+
+func TestVectorGetSet(t *testing.T) {
+	v := NewVector(1.0, 2.0, 3.0)
+
+	if v.X() != 1.0 || v.Y() != 2.0 || v.Z() != 3.0 {
+		t.Errorf("TestVectorGetSet %v %v %v %v %v %v", 1.0, 2.0, 3.0, v.X(), v.Y(), v.Z())
+	}
+
+	v.SetX(4.0)
+	v.SetY(5.0)
+	v.SetZ(6.0)
+
+	if v.X() != 4.0 || v.Y() != 5.0 || v.Z() != 6.0 {
+		t.Errorf("TestVectorGetSet %v %v %v %v %v %v", 4.0, 5.0, 6.0, v.X(), v.Y(), v.Z())
+	}
+}
+
+func TestLimit(t *testing.T) {
+	v := NewVector(2.0, 0.5, -1.0)
+
+	v = v.Limit(0.0, 1.0)
+
+	if v.X() != 1.0 || v.Y() != 0.5 || v.Z() != 0.0 {
+		t.Errorf("TestLimit %v %v %v %v %v %v", 1.0, 0.5, 0.0, v.X(), v.Y(), v.Z())
+	}
+}
+
+func TestFindClosest(t *testing.T) {
+	v := NewVector(2.0, 0.5, -1.0)
+
+	v1 := NewVector(2.0, 0.5, -1.1)
+	v2 := NewVector(2.0, 0.5, -0.9)
+
+	res := v.FindClosest(v1, v2)
+	if *res != *v2 {
+		t.Errorf("TestFindClosest %v %v", v2, res)
+	}
+}
+
 func TestMax(t *testing.T) {
 	v := NewVector(2.0, 0.0, -1.0)
 	if v.Max() != 2.0 {
-		t.Errorf("V: Max should be 2.0")
+		t.Errorf("TestMax %v %v", 2.0, v.Max())
 	}
 }
 
@@ -16,7 +63,7 @@ func TestAbs(t *testing.T) {
 	v := NewVector(1.0, -1.1, 1.1)
 	v2 := v.Abs()
 	if v2.X() != 1.0 && v2.Y() != 1.1 && v2.Z() != 1.1 {
-		t.Errorf("V: Abs not working")
+		t.Errorf("TestCross %v %v %v %v %v %v", 1.0, 1.1, 1.1, v2.X(), v2.Y(), v2.Z())
 	}
 }
 
@@ -27,7 +74,7 @@ func TestCross(t *testing.T) {
 	result := vec1.Cross(vec2)
 
 	if result.X() != -3.0 || result.Y() != 6.0 || result.Z() != -3.0 {
-		t.Errorf("TestCrossProduct %v %v %v %v %v %v", -3.0, 6.0, -3.0, result.x, result.y, result.z)
+		t.Errorf("TestCross %v %v %v %v %v %v", -3.0, 6.0, -3.0, result.x, result.y, result.z)
 	}
 }
 

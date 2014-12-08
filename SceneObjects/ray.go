@@ -8,7 +8,7 @@ type Ray struct {
 func (this *Ray) Origin() *Vector                { return this.origin }
 func (this *Ray) Direction() *Vector             { return this.direction }
 func (this *Ray) SetOrigin(origin *Vector)       { this.origin = origin }
-func (this *Ray) SetDirection(direction *Vector) { this.direction = direction }
+func (this *Ray) SetDirection(direction *Vector) { this.direction = direction.Normalized() }
 
 func (this *Ray) AtStep(count float64) *Vector {
 	return this.Origin().AddVector(this.Direction().MulVal(count))
