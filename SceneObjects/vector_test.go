@@ -1,6 +1,7 @@
 package objects
 
 import (
+	"log"
 	"testing"
 )
 
@@ -94,6 +95,7 @@ func TestDivValue(t *testing.T) {
 
 	result = vec1.DivVal(0)
 	if result.X() != 0.0 || result.Y() != 0.0 || result.Z() != 0.0 {
+		log.Println("div 0 issue...null vector returned")
 		t.Errorf("TestDivValue %v %v %v %v %v %v", 0.0, 0.0, 0.0, result.X(), result.Y(), result.Z())
 	}
 }
@@ -109,6 +111,7 @@ func TestDivVector(t *testing.T) {
 	vec2 = NewVector(0.0, 0.0, 0.0)
 	result = vec1.Div(vec2)
 	if result.X() != 0.0 || result.Y() != 0.0 || result.Z() != 0.0 {
+		log.Println("div 0 issue...null vector returned")
 		t.Errorf("TestDivVector %v %v %v %v %v %v", 0.0, 0.0, 0.0, result.X(), result.Y(), result.Z())
 	}
 }
@@ -139,6 +142,7 @@ func TestNormalize(t *testing.T) {
 	vec = vec.Normalized()
 
 	if vec.X() != 0.0 || vec.Y() != 0.0 || vec.Z() != 0.0 {
+		log.Println("div 0 issue...null vector returned")
 		t.Errorf("TestNormalize %v %v %v %v %v %v", 0.0, 0.0, 0.0, vec.X(), vec.Y(), vec.Z())
 	}
 }

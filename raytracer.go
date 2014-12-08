@@ -2,7 +2,7 @@ package main
 
 import (
 	"de/vorlesung/projekt/raytracer/Helper"
-	"de/vorlesung/projekt/raytracer/Raytracing"
+	scene "de/vorlesung/projekt/raytracer/Raytracing"
 	objects "de/vorlesung/projekt/raytracer/SceneObjects"
 	"log"
 	"os"
