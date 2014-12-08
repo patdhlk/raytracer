@@ -29,6 +29,7 @@ func NewScene(eye *objects.Vector, grid *Grid) *Scene {
 	tmp.SetElements(make([]SceneObject, 0, 0))
 	tmp.SetAmbient(objects.NewVector(0.0, 0.0, 0.0))
 	tmp.SetSkyColor(objects.NewVector(0.0, 0.0, 0.0))
+	tmp.SetLight(NewLight(objects.NewVector(0.0, 0.0, 0.0), objects.NewVector(0.0, 0.0, 0.0)))
 	return tmp
 }
 
