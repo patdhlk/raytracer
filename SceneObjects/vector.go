@@ -40,6 +40,9 @@ func (this *Vector) Abs() *Vector {
 
 func (this *Vector) Normalized() *Vector {
 	var len = this.Length()
+	if len == 0 {
+		return NewVector(0.0, 0.0, 0.0)
+	}
 	return NewVector(this.X()/len, this.Y()/len, this.Z()/len)
 }
 
@@ -84,10 +87,16 @@ func (this *Vector) MulVal(o float64) *Vector {
 }
 
 func (this *Vector) Div(o *Vector) *Vector {
+	if o.X() == 0 || o.Y() == 0 || o.Z() == 0 {
+		return NewVector(0.0, 0.0, 0.0)
+	}
 	return NewVector(this.X()/o.X(), this.Y()/o.Y(), this.Z()/o.Z())
 }
 
 func (this *Vector) DivVal(o float64) *Vector {
+	if o == 0 {
+		return NewVector(0.0, 0.0, 0.0)
+	}
 	return NewVector(this.X()/o, this.Y()/o, this.Z()/o)
 }
 
