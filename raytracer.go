@@ -49,7 +49,7 @@ func main() {
 	t1 := time.Now()
 	//get better result with 3 or 4 instead of 1
 	//i := currentScene.Render(width, height, 5)
-	i := currentScene.Render(width, height, 1)
+	i := currentScene.Render(width, height, 3)
 	log.Println("Rendering time: ", time.Since(t1))
 	err := h.ImageWriter(filename, i)
 	if err != nil {
