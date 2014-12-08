@@ -23,10 +23,8 @@ func TestImageWriter(t *testing.T) {
 	}
 
 	filename := "testpicture.png"
-
 	h := new(Helper)
 	h.ImageWriter(filename, m)
-
 	if _, err := os.Stat(filename); err != nil {
 		t.Errorf("TestImageWriter: %s", err)
 	}
