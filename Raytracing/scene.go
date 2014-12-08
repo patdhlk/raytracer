@@ -44,19 +44,36 @@ func (p *Scene) Render(x, y int, superSample int) image.Image {
 
 	for i := 0; i < tmp_x; i++ {
 		tmp_img[i] = make([]objects.Vector, tmp_y)
-		for j := 0; j < tmp_y; j++ {
+		// for j := 0; j < tmp_y; j++ {
 
-			posZ := rasterStart.Z() + (float64(i)+0.5)*rasterSizeZ
-			posY := rasterStart.Y() + (float64(j)+0.5)*rasterSizeY
-			gridPos := objects.NewVector(rasterStart.X(), posY, posZ)
+		// 	posZ := rasterStart.Z() + (float64(i)+0.5)*rasterSizeZ
+		// 	posY := rasterStart.Y() + (float64(j)+0.5)*rasterSizeY
+		// 	gridPos := objects.NewVector(rasterStart.X(), posY, posZ)
 
-			var color, _ = p.followRay(p.Eye(), gridPos.Sub(p.Eye()), nil, 8)
-			if color == nil {
-				color = p.skyColor
+		// 	var color, _ = p.followRay(p.Eye(), gridPos.Sub(p.Eye()), nil, 8)
+		// 	if color == nil {
+		// 		color = p.skyColor
+		// 	}
+
+		// 	tmp_img[i][j] = *color
+		// }
+
+		//parallel rendering
+		go func(i, tmp_y int, tmp_img [][]objects.Vector) {
+			for j := 0; j < tmp_y; j++ {
+
+				posZ := rasterStart.Z() + (float64(i)+0.5)*rasterSizeZ
+				posY := rasterStart.Y() + (float64(j)+0.5)*rasterSizeY
+				gridPos := objects.NewVector(rasterStart.X(), posY, posZ)
+
+				var color, _ = p.followRay(p.Eye(), gridPos.Sub(p.Eye()), nil, 8)
+				if color == nil {
+					color = p.skyColor
+				}
+
+				tmp_img[i][j] = *color
 			}
-
-			tmp_img[i][j] = *color
-		}
+		}(i, tmp_y, tmp_img)
 	}
 	return scale(tmp_img, tmp_x, tmp_y, superSample)
 }
