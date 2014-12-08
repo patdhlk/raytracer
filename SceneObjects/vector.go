@@ -58,9 +58,7 @@ func (this *Vector) Cross(o *Vector) *Vector {
 }
 
 func (this *Vector) Reflect(normal *Vector) *Vector {
-	var this_tmthis = this.Normalized()
-	var n_tmthis = normal.Normalized()
-	return this_tmthis.Sub(n_tmthis.MulVal(2 * this_tmthis.Dot(n_tmthis)))
+	return this.Normalized().Sub(normal.Normalized().MulVal(2 * this.Normalized().Dot(normal.Normalized())))
 }
 
 func (this *Vector) AddVector(o *Vector) *Vector {
