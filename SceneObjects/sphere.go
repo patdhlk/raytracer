@@ -15,15 +15,15 @@ func (p *Sphere) SetPosition(position *Vector) { p.position = position }
 func (p *Sphere) SetRadius(radius float64)     { p.radius = radius }
 
 func (p *Sphere) Intersection(ray *Ray) *Vector {
-	var d = ray.Origin().Sub(p.Position())
-	var db = ray.Direction().Dot(d)
-	var subSqrt = math.Pow(db, 2) + math.Pow(p.Radius(), 2) - math.Pow(d.Length(), 2)
+	d := ray.Origin().Sub(p.Position())
+	db := ray.Direction().Dot(d)
+	subSqrt := math.Pow(db, 2) + math.Pow(p.Radius(), 2) - math.Pow(d.Length(), 2)
 	if subSqrt < 0 {
 		return nil
 	}
-	var sqrt = math.Sqrt(subSqrt)
-	var t1 = -db + sqrt
-	var t2 = -db - sqrt
+	sqrt := math.Sqrt(subSqrt)
+	t1 := -db + sqrt
+	t2 := -db - sqrt
 	if t1 < 0 && t2 < 0 {
 		return nil
 	}
@@ -38,7 +38,7 @@ func (p *Sphere) Intersection(ray *Ray) *Vector {
 }
 
 func NewSphere(position *Vector, radius float64) *Sphere {
-	var tmp = new(Sphere)
+	tmp := new(Sphere)
 	tmp.SetPosition(position)
 	tmp.SetRadius(radius)
 	return tmp
