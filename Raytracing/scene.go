@@ -50,7 +50,7 @@ func (p *Scene) Render(x, y int, superSample int) image.Image {
 			posY := rasterStart.Y() + (float64(j)+0.5)*rasterSizeY
 			gridPos := objects.NewVector(rasterStart.X(), posY, posZ)
 
-			var color, _ = p.followRay(p.eye, gridPos.Sub(p.eye), nil, 8)
+			var color, _ = p.followRay(p.Eye(), gridPos.Sub(p.Eye()), nil, 8)
 			if color == nil {
 				color = p.skyColor
 			}
@@ -69,7 +69,7 @@ func scale(in [][]objects.Vector, size_x, size_y, factor int) *image.RGBA {
 			var tmpVal = objects.NewVector(0.0, 0.0, 0.0)
 			for k := 0; k < factor; k++ {
 				for l := 0; l < factor; l++ {
-					tmpVal = tmpVal.Add(&in[i+k][j+l])
+					tmpVal = tmpVal.AddVector(&in[i+k][j+l])
 				}
 			}
 
@@ -86,9 +86,9 @@ func scale(in [][]objects.Vector, size_x, size_y, factor int) *image.RGBA {
 }
 
 func (p *Scene) followRay(position, direction *objects.Vector, ignored SceneObject, depthLeft uint8) (*objects.Vector, *objects.Vector) {
-	var Ray = objects.NewRay(position, direction)
+	Ray := objects.NewRay(position, direction)
 
-	var intersectObject, intersectPos, color, normal, diffuse, specularIntensity, specularPower, reflectivity, nearestDist = p.intersectAll(Ray, ignored)
+	intersectObject, intersectPos, color, normal, diffuse, specularIntensity, specularPower, reflectivity, nearestDist := p.intersectAll(Ray, ignored)
 
 	if math.IsInf(nearestDist, 1) {
 		color = nil
@@ -102,20 +102,20 @@ func (p *Scene) followRay(position, direction *objects.Vector, ignored SceneObje
 			phongSpecular = objects.NewVector(0.0, 0.0, 0.0)
 		}
 
-		color = color.Mul(phongColor).Add(phongSpecular).Limit(0, 1)
+		color = color.Mul(phongColor).AddVector(phongSpecular).Limit(0, 1)
 
 		if depthLeft > 0 && reflectivity > 0 {
-			var reflectColor, reflectPos = p.followRay(intersectPos, direction.Reflect(normal), intersectObject, depthLeft-1)
+			reflectColor, reflectPos := p.followRay(intersectPos, direction.Reflect(normal), intersectObject, depthLeft-1)
 			if reflectColor != nil {
-				color = color.MulVal(1-reflectivity).Add(reflectColor.MulVal(reflectivity)).Limit(0, 1)
+				color = color.MulVal(1-reflectivity).AddVector(reflectColor.MulVal(reflectivity)).Limit(0, 1)
 
 				// Ambient occlusion
-				var reflectDistance = reflectPos.Sub(intersectPos).Length()
+				reflectDistance := reflectPos.Sub(intersectPos).Length()
 				if reflectDistance < global {
 					color = color.Mul(objects.NewVector(1.0, 1.0, 1.0).MulVal(reflectDistance/global).Limit(0.25, 1))
 				}
 			} else {
-				color = color.MulVal(1-reflectivity).Add(p.skyColor.MulVal(reflectivity)).Limit(0, 1)
+				color = color.MulVal(1-reflectivity).AddVector(p.skyColor.MulVal(reflectivity)).Limit(0, 1)
 			}
 		}
 	}
@@ -129,7 +129,7 @@ func (p *Scene) checkInShadow(intersectPos, directionToLight *objects.Vector, in
 }
 
 func (p *Scene) calcPhong(intersectObject SceneObject, intersectPos *objects.Vector, ray *objects.Ray, normal *objects.Vector,
-	diffuse float64, specularIntensity float64,
+	diffuse, specularIntensity,
 	specularPower float64) (phongColor, phongSpecular *objects.Vector) {
 
 	phongColor = p.ambient
@@ -150,7 +150,7 @@ func (p *Scene) calcPhong(intersectObject SceneObject, intersectPos *objects.Vec
 		}
 		phongSpecular = p.light.Color().MulVal(specularIntensity*math.Pow(specularAmount, specularPower)).Limit(0, 1)
 
-		phongColor = phongColor.Add(phongDiffuse).Limit(0, 1)
+		phongColor = phongColor.AddVector(phongDiffuse).Limit(0, 1)
 	}
 	return
 }

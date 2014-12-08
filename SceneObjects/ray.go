@@ -11,7 +11,7 @@ func (this *Ray) SetOrigin(origin *Vector)       { this.origin = origin }
 func (this *Ray) SetDirection(direction *Vector) { this.direction = direction }
 
 func (this *Ray) AtStep(count float64) *Vector {
-	return this.Origin().Add(this.Direction().MulVal(count))
+	return this.Origin().AddVector(this.Direction().MulVal(count))
 }
 
 func NewRay(origin, direction *Vector) *Ray {

@@ -59,7 +59,7 @@ func (this *Vector) Reflect(normal *Vector) *Vector {
 	return this_tmthis.Sub(n_tmthis.MulVal(2 * this_tmthis.Dot(n_tmthis)))
 }
 
-func (this *Vector) Add(o *Vector) *Vector {
+func (this *Vector) AddVector(o *Vector) *Vector {
 	return NewVector(this.X()+o.X(), this.Y()+o.Y(), this.Z()+o.Z())
 }
 
