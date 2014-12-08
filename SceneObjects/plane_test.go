@@ -41,6 +41,6 @@ func TestPlaneFindIntersection(t *testing.T) {
 	pos = p.Intersection(NewRay(NewVector(0, -1, 0), NewVector(0, -1, 0)))
 
 	if pos != nil {
-		t.Errorf("TestPlaneFindIntersection 3 %v %v", NewVector(3.0, 0.0, 0.0), pos)
+		t.Errorf("TestPlaneFindIntersection 3 %v", pos)
 	}
 }
