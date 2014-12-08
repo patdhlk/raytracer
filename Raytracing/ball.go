@@ -22,7 +22,7 @@ func (p *Ball) Intersection(line *objects.Ray) (position, color,
 		return
 	}
 	color = p.Color()
-	normal = position.Sub(p.Sphere().GetPosition())
+	normal = position.Sub(p.Sphere().Position())
 	diffuse = p.Diffuse()
 	specularIntensity = p.SpecularIntensity()
 	specularPower = p.SpecularPower()

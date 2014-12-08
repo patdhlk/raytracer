@@ -9,15 +9,15 @@ type Sphere struct {
 	radius   float64
 }
 
-func (p *Sphere) GetPosition() *Vector         { return p.position }
-func (p *Sphere) GetRadius() float64           { return p.radius }
+func (p *Sphere) Position() *Vector            { return p.position }
+func (p *Sphere) Radius() float64              { return p.radius }
 func (p *Sphere) SetPosition(position *Vector) { p.position = position }
 func (p *Sphere) SetRadius(radius float64)     { p.radius = radius }
 
 func (p *Sphere) Intersection(ray *Ray) *Vector {
-	var d = ray.Origin().Sub(p.position)
+	var d = ray.Origin().Sub(p.Position())
 	var db = ray.Direction().Dot(d)
-	var subSqrt = math.Pow(db, 2) + math.Pow(p.radius, 2) - math.Pow(d.Length(), 2)
+	var subSqrt = math.Pow(db, 2) + math.Pow(p.Radius(), 2) - math.Pow(d.Length(), 2)
 	if subSqrt < 0 {
 		return nil
 	}
