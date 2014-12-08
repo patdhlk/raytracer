@@ -4,16 +4,14 @@ import (
 	"math"
 )
 
+//the sphere
 type Sphere struct {
 	position *Vector
 	radius   float64
 }
 
-func (p *Sphere) Position() *Vector            { return p.position }
-func (p *Sphere) Radius() float64              { return p.radius }
-func (p *Sphere) SetPosition(position *Vector) { p.position = position }
-func (p *Sphere) SetRadius(radius float64)     { p.radius = radius }
-
+//the function to calculate the intersection point between a ray and the sphere
+//returns the position of the intersection, a vector
 func (p *Sphere) Intersection(ray *Ray) *Vector {
 	d := ray.Origin().Sub(p.Position())
 	db := ray.Direction().Dot(d)
@@ -38,9 +36,24 @@ func (p *Sphere) Intersection(ray *Ray) *Vector {
 	return ray.AtStep(jumps)
 }
 
+//Creates a new Instance of the Sphere struct
 func NewSphere(position *Vector, radius float64) *Sphere {
 	tmp := new(Sphere)
 	tmp.SetPosition(position)
 	tmp.SetRadius(radius)
 	return tmp
 }
+
+//Getters and Setters
+
+//returns the Position of the Sphere
+func (p *Sphere) Position() *Vector { return p.position }
+
+//return the Radius of the Sphere
+func (p *Sphere) Radius() float64 { return p.radius }
+
+//sets the position
+func (p *Sphere) SetPosition(position *Vector) { p.position = position }
+
+//sets the radius
+func (p *Sphere) SetRadius(radius float64) { p.radius = radius }
