@@ -28,6 +28,9 @@ func TestImageWriter(t *testing.T) {
 	if _, err := os.Stat(filename); err != nil {
 		t.Errorf("TestImageWriter: %s", err)
 	}
+
+	filename = "T:\\TTTTTT"
+	h.ImageWriter(filename, m)
 }
 
 func TestRound(t *testing.T) {

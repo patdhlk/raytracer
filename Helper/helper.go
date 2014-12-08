@@ -12,18 +12,20 @@ import (
 type Helper struct {
 }
 
-func (h *Helper) ImageWriter(filename string, m image.Image) {
+func (h *Helper) ImageWriter(filename string, m image.Image) error {
 	log.Println("Saving Image")
 	file, err := os.Create(filename)
 	if err != nil {
-		log.Println("Error Creating Imagefile ", err)
-		os.Exit(1)
+		return err
+		//log.Println("Error Creating Imagefile ", err)
+		//os.Exit(1)
 	}
 	w := bufio.NewWriter(file)
 	png.Encode(w, m)
 	w.Flush()
 	log.Println("image writing finished")
 	file.Close()
+	return nil
 }
 
 func Round(val float64, places int) (newVal float64) {

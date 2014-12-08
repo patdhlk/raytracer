@@ -6,12 +6,21 @@ import (
 )
 
 func TestNewScene(t *testing.T) {
+	defer func() {
+		e := recover()
+		if e == nil {
+			t.Errorf("TestNewScene error is nil")
+		}
+	}()
 	g := NewGrid(objects.NewVector(1.0, 2.0, 3.0), objects.NewVector(1.0, 5.0, 6.0))
 	s := NewScene(objects.NewVector(7.0, 8.0, 9.0), g)
 
 	if *s.eye != *objects.NewVector(7.0, 8.0, 9.0) || *s.grid.top_left != *objects.NewVector(1.0, 2.0, 3.0) || *s.grid.bottom_right != *objects.NewVector(1.0, 5.0, 6.0) || s.elements == nil || *s.ambient != *objects.NewVector(0.0, 0.0, 0.0) || *s.skyColor != *objects.NewVector(0.0, 0.0, 0.0) || s.light == nil {
 		t.Errorf("TestNewScene %v %v %v %v %v %v %v", s.eye, s.grid.top_left, s.grid.bottom_right, s.elements, s.ambient, s.skyColor, s.light)
 	}
+
+	g = NewGrid(objects.NewVector(1.0, 2.0, 3.0), objects.NewVector(2.0, 5.0, 6.0))
+	s = NewScene(objects.NewVector(7.0, 8.0, 9.0), g)
 }
 
 func TestSceneGetSet(t *testing.T) {
