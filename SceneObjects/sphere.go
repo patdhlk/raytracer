@@ -17,7 +17,8 @@ func (p *Sphere) SetRadius(radius float64)     { p.radius = radius }
 func (p *Sphere) Intersection(ray *Ray) *Vector {
 	d := ray.Origin().Sub(p.Position())
 	db := ray.Direction().Dot(d)
-	subSqrt := math.Pow(db, 2) + math.Pow(p.Radius(), 2) - math.Pow(d.Length(), 2)
+	//subSqrt := math.Pow(db, 2) + math.Pow(p.Radius(), 2) - math.Pow(d.Length(), 2)
+	subSqrt := db*db + p.Radius()*p.Radius() - d.Length()*d.Length()
 	if subSqrt < 0 {
 		return nil
 	}

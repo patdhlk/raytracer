@@ -9,7 +9,8 @@ type Vector struct {
 }
 
 func (this *Vector) Length() float64 {
-	return math.Sqrt(math.Pow(this.X(), 2) + math.Pow(this.Y(), 2) + math.Pow(this.Z(), 2))
+	//return math.Sqrt(math.Pow(this.X(), 2) + math.Pow(this.Y(), 2) + math.Pow(this.Z(), 2))
+	return math.Sqrt(this.X()*this.X() + this.Y()*this.Y() + this.Z()*this.Z())
 }
 
 func LimitFloat64(value, min, max float64) float64 {
