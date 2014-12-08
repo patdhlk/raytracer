@@ -52,6 +52,7 @@ func main() {
 	i := currentScene.Render(width, height, 3)
 	log.Println("Rendering time: ", time.Since(t1))
 	err := h.ImageWriter(filename, i)
-	if (err != null)
+	if err != nil {
 		log.Println("Error in image write: ", err)
+	}
 }
