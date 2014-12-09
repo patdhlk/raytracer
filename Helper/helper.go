@@ -1,3 +1,4 @@
+//Package Helper implements neccessary helper functions
 package Helper
 
 import (
@@ -12,6 +13,8 @@ import (
 type Helper struct {
 }
 
+//writes the image to the disk,
+// used by the Scene.Render function
 func (h *Helper) ImageWriter(filename string, m image.Image) error {
 	log.Println("Saving Image")
 	file, err := os.Create(filename)
@@ -28,6 +31,7 @@ func (h *Helper) ImageWriter(filename string, m image.Image) error {
 	return nil
 }
 
+//rounding function
 func Round(val float64, places int) (newVal float64) {
 	var round float64
 	pow := math.Pow(10, float64(places))
@@ -38,6 +42,5 @@ func Round(val float64, places int) (newVal float64) {
 	} else {
 		round = math.Floor(digit)
 	}
-	newVal = round / pow
-	return
+	return round / pow
 }
