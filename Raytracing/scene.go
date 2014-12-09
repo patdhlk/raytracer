@@ -8,10 +8,13 @@ import (
 	"math"
 )
 
+//global variable
 var global = 0.25
 
+//the scene implementation
+// a scene has a view (the view attribute), a grid, several elements and so on
 type Scene struct {
-	eye      *objects.Vector
+	view     *objects.Vector
 	grid     *Grid
 	elements []SceneObject
 	ambient  *objects.Vector
@@ -19,29 +22,17 @@ type Scene struct {
 	light    *Light
 }
 
-func NewScene(eye *objects.Vector, grid *Grid) *Scene {
-	if grid.TopLeft().X() != grid.BottomRight().X() {
-		panic("not same x values on corners")
-	}
-	tmp := new(Scene)
-	tmp.SetEye(eye)
-	tmp.SetGrid(grid)
-	tmp.SetElements(make([]SceneObject, 0, 0))
-	tmp.SetAmbient(objects.NewVector(0.0, 0.0, 0.0))
-	tmp.SetSkyColor(objects.NewVector(0.0, 0.0, 0.0))
-	tmp.SetLight(NewLight(objects.NewVector(0.0, 0.0, 0.0), objects.NewVector(0.0, 0.0, 0.0)))
-	return tmp
-}
-
-func (p *Scene) Render(x, y int, superSample int) image.Image {
+//the general rendering function for the current scene,
+//returns the image which one the imageWriter in the helper package saves to disk
+func (s *Scene) Render(x, y int, superSample int) image.Image {
 	log.Println("Start rendering (function) Image\n")
 	tmp_x := x * superSample
 	tmp_y := y * superSample
 	tmp_img := make([][]objects.Vector, tmp_x)
 
-	rasterStart := p.grid.TopLeft()
-	rasterSizeZ := math.Abs(rasterStart.Z()-p.grid.BottomRight().Z()) / float64(tmp_x)
-	rasterSizeY := -math.Abs(rasterStart.Y()-p.grid.BottomRight().Y()) / float64(tmp_y)
+	rasterStart := s.grid.TopLeft()
+	rasterSizeZ := math.Abs(rasterStart.Z()-s.grid.BottomRight().Z()) / float64(tmp_x)
+	rasterSizeY := -math.Abs(rasterStart.Y()-s.grid.BottomRight().Y()) / float64(tmp_y)
 
 	for i := 0; i < tmp_x; i++ {
 		tmp_img[i] = make([]objects.Vector, tmp_y)
@@ -51,9 +42,9 @@ func (p *Scene) Render(x, y int, superSample int) image.Image {
 		// 	posY := rasterStart.Y() + (float64(j)+0.5)*rasterSizeY
 		// 	gridPos := objects.NewVector(rasterStart.X(), posY, posZ)
 
-		// 	var color, _ = p.followRay(p.Eye(), gridPos.Sub(p.Eye()), nil, 8)
+		// 	var color, _ = s.followRay(s.View(), gridPos.Sub(s.View()), nil, 8)
 		// 	if color == nil {
-		// 		color = p.skyColor
+		// 		color = s.skyColor
 		// 	}
 
 		// 	tmp_img[i][j] = *color
@@ -67,9 +58,9 @@ func (p *Scene) Render(x, y int, superSample int) image.Image {
 				posY := rasterStart.Y() + (float64(j)+0.5)*rasterSizeY
 				gridPos := objects.NewVector(rasterStart.X(), posY, posZ)
 
-				var color, _ = p.followRay(p.Eye(), gridPos.Sub(p.Eye()), nil, 8)
+				var color, _ = s.raytracing(s.View(), gridPos.SubtractVector(s.View()), nil, 8)
 				if color == nil {
-					color = p.skyColor
+					color = s.skyColor
 				}
 
 				tmp_img[i][j] = *color
@@ -79,6 +70,7 @@ func (p *Scene) Render(x, y int, superSample int) image.Image {
 	return scale(tmp_img, tmp_x, tmp_y, superSample)
 }
 
+//scaling function
 func scale(in [][]objects.Vector, size_x, size_y, factor int) *image.RGBA {
 	var out = image.NewRGBA(image.Rect(0, 0, size_x/factor, size_y/factor))
 
@@ -92,7 +84,7 @@ func scale(in [][]objects.Vector, size_x, size_y, factor int) *image.RGBA {
 				}
 			}
 
-			tmpVal = tmpVal.DivVal(float64(factor * factor))
+			tmpVal = tmpVal.DivideValue(float64(factor * factor))
 			var outColor = new(imageColor.RGBA)
 			outColor.R = uint8(tmpVal.X() * 255)
 			outColor.G = uint8(tmpVal.Y() * 255)
@@ -104,76 +96,79 @@ func scale(in [][]objects.Vector, size_x, size_y, factor int) *image.RGBA {
 	return out
 }
 
-func (p *Scene) followRay(position, direction *objects.Vector, ignored SceneObject, depthLeft uint8) (*objects.Vector, *objects.Vector) {
+//the recursive raytracing function, recursion in line 116
+func (this *Scene) raytracing(position, direction *objects.Vector, ignored SceneObject, depthLeft uint8) (*objects.Vector, *objects.Vector) {
 	Ray := objects.NewRay(position, direction)
 
-	intersectObject, intersectPos, color, normal, diffuse, specularIntensity, specularPower, reflectivity, nearestDist := p.intersectAll(Ray, ignored)
+	intersectObject, intersectPos, color, normal, diffuse, specularIntensity, specularPower, reflectivity, nearestDist := this.intersectAll(Ray, ignored)
 
 	if math.IsInf(nearestDist, 1) {
 		color = nil
 	} else {
 		var phongColor *objects.Vector
 		var phongSpecular *objects.Vector
-		if p.light != nil {
-			phongColor, phongSpecular = p.calcPhong(intersectObject, intersectPos, Ray, normal, diffuse, specularIntensity/5, specularPower*2)
+		if this.light != nil {
+			phongColor, phongSpecular = this.phongCalculation(intersectObject, intersectPos, Ray, normal, diffuse, specularIntensity/5, specularPower*2)
 		} else {
 			phongColor = objects.NewVector(1.0, 1.0, 1.0)
 			phongSpecular = objects.NewVector(0.0, 0.0, 0.0)
 		}
 
-		color = color.Mul(phongColor).AddVector(phongSpecular).Limit(0, 1)
+		color = color.MultiplyVector(phongColor).AddVector(phongSpecular).Limit(0, 1)
 
 		if depthLeft > 0 && reflectivity > 0 {
-			reflectColor, reflectPos := p.followRay(intersectPos, direction.Reflect(normal), intersectObject, depthLeft-1)
+			reflectColor, reflectPos := this.raytracing(intersectPos, direction.Reflection(normal), intersectObject, depthLeft-1)
 			if reflectColor != nil {
-				color = color.MulVal(1-reflectivity).AddVector(reflectColor.MulVal(reflectivity)).Limit(0, 1)
+				color = color.MultiplyValue(1-reflectivity).AddVector(reflectColor.MultiplyValue(reflectivity)).Limit(0, 1)
 
 				// Ambient occlusion
-				reflectDistance := reflectPos.Sub(intersectPos).Length()
+				reflectDistance := reflectPos.SubtractVector(intersectPos).Length()
 				if reflectDistance < global {
-					color = color.Mul(objects.NewVector(1.0, 1.0, 1.0).MulVal(reflectDistance/global).Limit(0.25, 1))
+					color = color.MultiplyVector(objects.NewVector(1.0, 1.0, 1.0).MultiplyValue(reflectDistance/global).Limit(0.25, 1))
 				}
 			} else {
-				color = color.MulVal(1-reflectivity).AddVector(p.skyColor.MulVal(reflectivity)).Limit(0, 1)
+				color = color.MultiplyValue(1-reflectivity).AddVector(this.SkyColor().MultiplyValue(reflectivity)).Limit(0, 1)
 			}
 		}
 	}
 	return color, intersectPos
 }
 
-func (p *Scene) checkInShadow(intersectPos, directionToLight *objects.Vector, intersectObject SceneObject) bool {
+func (p *Scene) isShadow(intersectPos, directionToLight *objects.Vector, intersectObject SceneObject) bool {
 	r := objects.NewRay(intersectPos, directionToLight)
 	_, pos, _, _, _, _, _, _, _ := p.intersectAll(r, intersectObject)
 	return pos != nil
 }
 
-func (p *Scene) calcPhong(intersectObject SceneObject, intersectPos *objects.Vector, ray *objects.Ray, normal *objects.Vector,
+//calculates the phone
+func (p *Scene) phongCalculation(intersectObject SceneObject, intersectPos *objects.Vector, ray *objects.Ray, normal *objects.Vector,
 	diffuse, specularIntensity,
 	specularPower float64) (phongColor, phongSpecular *objects.Vector) {
 
 	phongColor = p.ambient
 	phongSpecular = objects.NewVector(0.0, 0.0, 0.0)
 
-	directionToLight := p.light.Position().Sub(intersectPos).Normalized()
-	if !p.checkInShadow(intersectPos, directionToLight, intersectObject) {
+	directionToLight := p.light.Position().SubtractVector(intersectPos).Normalized()
+	if !p.isShadow(intersectPos, directionToLight, intersectObject) {
 
-		directionFromLight := directionToLight.MulVal(-1)
+		directionFromLight := directionToLight.MultiplyValue(-1)
 		normal = normal.Normalized()
-		phongDiffuse := p.light.Color().MulVal(diffuse*directionToLight.Dot(normal)).Limit(0, 1)
+		phongDiffuse := p.light.Color().MultiplyValue(diffuse*directionToLight.DotProduct(normal)).Limit(0, 1)
 
-		directionLightOut := directionFromLight.Reflect(normal).Normalized()
-		directionIntersectEye := ray.Origin().Sub(intersectPos).Normalized()
-		specularAmount := directionLightOut.Dot(directionIntersectEye)
+		directionLightOut := directionFromLight.Reflection(normal).Normalized()
+		directionIntersectView := ray.Origin().SubtractVector(intersectPos).Normalized()
+		specularAmount := directionLightOut.DotProduct(directionIntersectView)
 		if specularAmount < 0 {
 			specularAmount = 0
 		}
-		phongSpecular = p.light.Color().MulVal(specularIntensity*math.Pow(specularAmount, specularPower)).Limit(0, 1)
+		phongSpecular = p.light.Color().MultiplyValue(specularIntensity*math.Pow(specularAmount, specularPower)).Limit(0, 1)
 
 		phongColor = phongColor.AddVector(phongDiffuse).Limit(0, 1)
 	}
 	return
 }
 
+//intersects all elements in the current scene to calculate the shadow
 func (p *Scene) intersectAll(Ray *objects.Ray, ignored SceneObject) (intersectObject SceneObject,
 	intersectPos, color, normal *objects.Vector,
 	diffuse, specularIntensity, specularPower,
@@ -189,7 +184,7 @@ func (p *Scene) intersectAll(Ray *objects.Ray, ignored SceneObject) (intersectOb
 		if intersectP == nil {
 			continue
 		}
-		var length = intersectP.Sub(Ray.Origin()).Length()
+		var length = intersectP.SubtractVector(Ray.Origin()).Length()
 		if length < nearestDist {
 			intersectObject = element
 			intersectPos = intersectP
@@ -205,13 +200,29 @@ func (p *Scene) intersectAll(Ray *objects.Ray, ignored SceneObject) (intersectOb
 	return
 }
 
-func (p *Scene) Eye() *objects.Vector                 { return p.eye }
+//creates a new instace of a scene
+func NewScene(view *objects.Vector, grid *Grid) *Scene {
+	if grid.TopLeft().X() != grid.BottomRight().X() {
+		panic("not same x values on corners")
+	}
+	scene := new(Scene)
+	scene.SetView(view)
+	scene.SetGrid(grid)
+	scene.SetElements(make([]SceneObject, 0, 0))
+	scene.SetAmbient(objects.NewVector(0.0, 0.0, 0.0))
+	scene.SetSkyColor(objects.NewVector(0.0, 0.0, 0.0))
+	scene.SetLight(NewLight(objects.NewVector(0.0, 0.0, 0.0), objects.NewVector(0.0, 0.0, 0.0)))
+	return scene
+}
+
+//Getters and Setters
+func (p *Scene) View() *objects.Vector                { return p.view }
 func (p *Scene) Grid() *Grid                          { return p.grid }
 func (p *Scene) Elements() []SceneObject              { return p.elements }
 func (p *Scene) Ambient() *objects.Vector             { return p.ambient }
 func (p *Scene) Light() *Light                        { return p.light }
 func (p *Scene) SkyColor() *objects.Vector            { return p.skyColor }
-func (p *Scene) SetEye(eye *objects.Vector)           { p.eye = eye }
+func (p *Scene) SetView(view *objects.Vector)         { p.view = view }
 func (p *Scene) SetGrid(grid *Grid)                   { p.grid = grid }
 func (p *Scene) SetElements(elements []SceneObject)   { p.elements = elements }
 func (p *Scene) SetAmbient(ambient *objects.Vector)   { p.ambient = ambient }

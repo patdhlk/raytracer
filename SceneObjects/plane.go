@@ -9,7 +9,7 @@ type Plane struct {
 //calculates the intersection between the plane and one ray
 //returns the position of intersection, a vector
 func (p *Plane) Intersection(ray *Ray) *Vector {
-	t := p.Position().Sub(ray.Origin()).Dot(p.Normal()) / ray.Direction().Dot(p.normal)
+	t := p.Position().SubtractVector(ray.Origin()).DotProduct(p.Normal()) / ray.Direction().DotProduct(p.Normal())
 	if t <= 0 {
 		return nil
 	}

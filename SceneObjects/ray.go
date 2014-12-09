@@ -7,7 +7,7 @@ type Ray struct {
 }
 
 func (this *Ray) AtStep(count float64) *Vector {
-	return this.Origin().AddVector(this.Direction().MulVal(count))
+	return this.Origin().AddVector(this.Direction().MultiplyValue(count))
 }
 
 //creats a new instance of a ray

@@ -5,6 +5,7 @@ import (
 	objects "de/vorlesung/projekt/raytracer/SceneObjects"
 )
 
+//the surface implementation
 type Surface struct {
 	plane             *objects.Plane
 	color             *objects.Vector
@@ -14,45 +15,48 @@ type Surface struct {
 	reflectivity      float64
 }
 
-func (p *Surface) Intersection(line *objects.Ray) (position,
+//calculaties the intersection between the surface and one ray
+func (s *Surface) Intersection(line *objects.Ray) (position,
 	color, normal *objects.Vector, diffuse,
 	specularIntensity, specularPower, reflectivity float64) {
 
-	position = p.plane.Intersection(line)
+	position = s.plane.Intersection(line)
 	if position == nil {
 		return
 	}
-	color = p.color.Mul(p.getTextureColor(position))
-	normal = p.Plane().Normal()
-	diffuse = p.Diffuse()
-	specularIntensity = p.SpecularIntensity()
-	specularPower = p.SpecularPower()
-	reflectivity = p.Reflectivity()
+	color = s.Color().MultiplyVector(s.makeChessBoard(position))
+	normal = s.Plane().Normal()
+	diffuse = s.Diffuse()
+	specularIntensity = s.SpecularIntensity()
+	specularPower = s.SpecularPower()
+	reflectivity = s.Reflectivity()
 	return
 }
 
-func (p *Surface) getTextureColor(position *objects.Vector) *objects.Vector {
-	position = position.Abs()
-	var intVal1 = Helper.Round(position.X(), 0)
-	var intVal2 = Helper.Round(position.Y(), 0)
-	var intVal3 = Helper.Round(position.Z(), 0)
-	if int(intVal1+intVal2+intVal3)%2 == 0 {
-		return objects.NewVector(0.0, 0.0, 0.0)
+//returns the color of a texture as a vector
+//chessboard is created here
+func (s *Surface) makeChessBoard(position *objects.Vector) *objects.Vector {
+	position = position.Absolute()
+	pX := Helper.Round(position.X(), 0)
+	pY := Helper.Round(position.Y(), 0)
+	pZ := Helper.Round(position.Z(), 0)
+	if int(pX+pY+pZ)%2 == 0 {
+		return objects.NewVector(0.0, 0.0, 0.0) //black chess field
 	}
-	return objects.NewVector(1.0, 1.0, 1.0)
+	return objects.NewVector(1.0, 1.0, 1.0) //white chess field
 }
 
 func NewSurface(plane *objects.Plane, color *objects.Vector, diffuse,
 	specularIntensity, specularPower,
 	reflectivity float64) *Surface {
-	var tmp = new(Surface)
-	tmp.SetPlane(plane)
-	tmp.SetColor(color)
-	tmp.SetDiffuse(diffuse)
-	tmp.SetSpecularIntensity(specularIntensity)
-	tmp.SetSpecularPower(specularPower)
-	tmp.SetReflectivity(reflectivity)
-	return tmp
+	surface := new(Surface)
+	surface.SetPlane(plane)
+	surface.SetColor(color)
+	surface.SetDiffuse(diffuse)
+	surface.SetSpecularIntensity(specularIntensity)
+	surface.SetSpecularPower(specularPower)
+	surface.SetReflectivity(reflectivity)
+	return surface
 }
 
 func (p *Surface) Plane() *objects.Plane          { return p.plane }

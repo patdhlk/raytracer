@@ -1,8 +1,8 @@
-//Package objects implements the scene objects: vector, ray, plane and sphere
-//vector = Vektor
-//ray = Lichtstrahl
-//plane = Ebene
-//sphere = Kugel
+//Package objects implements the scene objects: vector, ray, plane and sphere,
+// vector = Vektor,
+// ray = Lichtstrahl,
+// plane = Ebene,
+// sphere = Kugel
 package objects
 
 import (
@@ -46,7 +46,7 @@ func (this *Vector) Max() float64 {
 }
 
 //the absolute value of a vector
-func (this *Vector) Abs() *Vector {
+func (this *Vector) Absolute() *Vector {
 	return NewVector(math.Abs(this.X()), math.Abs(this.Y()), math.Abs(this.Z()))
 }
 
@@ -60,20 +60,20 @@ func (this *Vector) Normalized() *Vector {
 }
 
 //returns the dotproduct of two vector
-func (this *Vector) Dot(o *Vector) float64 {
+func (this *Vector) DotProduct(o *Vector) float64 {
 	return this.X()*o.X() + this.Y()*o.Y() + this.Z()*o.Z()
 }
 
 //returns the cross product two vectors
-func (this *Vector) Cross(o *Vector) *Vector {
+func (this *Vector) CrossProduct(o *Vector) *Vector {
 	return NewVector(this.Y()*o.Z()-this.Z()*o.Y(),
 		this.Z()*o.X()-this.X()*o.Z(),
 		this.X()*o.Y()-this.Y()*o.X())
 }
 
 //the vector reflection method
-func (this *Vector) Reflect(normal *Vector) *Vector {
-	return this.Normalized().Sub(normal.Normalized().MulVal(2 * this.Normalized().Dot(normal.Normalized())))
+func (this *Vector) Reflection(normal *Vector) *Vector {
+	return this.Normalized().SubtractVector(normal.Normalized().MultiplyValue(2 * this.Normalized().DotProduct(normal.Normalized())))
 }
 
 //adds two vectors
@@ -91,37 +91,37 @@ func (this *Vector) AddVector(o *Vector) *Vector {
 
 //adds a value to a vector
 //returns new vector
-func (this *Vector) AddVal(o float64) *Vector {
+func (this *Vector) AddValue(o float64) *Vector {
 	return NewVector(this.X()+o, this.Y()+o, this.Z()+o)
 }
 
 //subtract o vector from another vector (this)
 //returns new vector
-func (this *Vector) Sub(o *Vector) *Vector {
+func (this *Vector) SubtractVector(o *Vector) *Vector {
 	return NewVector(this.X()-o.X(), this.Y()-o.Y(), this.Z()-o.Z())
 }
 
 //subtracts a value from a vector
 //returns new vector
-func (this *Vector) SubVal(o float64) *Vector {
+func (this *Vector) SubtractValue(o float64) *Vector {
 	return NewVector(this.X()-o, this.Y()-o, this.Z()-o)
 }
 
 //multiply two vectors
 //returns the new vector
-func (this *Vector) Mul(o *Vector) *Vector {
+func (this *Vector) MultiplyVector(o *Vector) *Vector {
 	return NewVector(this.X()*o.X(), this.Y()*o.Y(), this.Z()*o.Z())
 }
 
 //multiply a value with one vector
 //returns the new vector
-func (this *Vector) MulVal(o float64) *Vector {
+func (this *Vector) MultiplyValue(o float64) *Vector {
 	return NewVector(this.X()*o, this.Y()*o, this.Z()*o)
 }
 
 //divide two vectors
 //returns the new vector
-func (this *Vector) Div(o *Vector) *Vector {
+func (this *Vector) DivideVector(o *Vector) *Vector {
 	if o.X() == 0 || o.Y() == 0 || o.Z() == 0 {
 		return NewVector(0.0, 0.0, 0.0)
 	}
@@ -130,7 +130,7 @@ func (this *Vector) Div(o *Vector) *Vector {
 
 //devide a vector through a value
 //returns the new vector
-func (this *Vector) DivVal(o float64) *Vector {
+func (this *Vector) DivideValue(o float64) *Vector {
 	if o == 0 {
 		return NewVector(0.0, 0.0, 0.0)
 	}
@@ -139,9 +139,9 @@ func (this *Vector) DivVal(o float64) *Vector {
 
 //find the closest vector, out of two, to the vector,
 //returns the nearer vector
-func (this *Vector) FindClosest(this1, this2 *Vector) *Vector {
-	var dst1 = this.Sub(this1).Length()
-	var dst2 = this.Sub(this2).Length()
+func (this *Vector) GetClosest(this1, this2 *Vector) *Vector {
+	var dst1 = this.SubtractVector(this1).Length()
+	var dst2 = this.SubtractVector(this2).Length()
 	if dst1 < dst2 {
 		return this1
 	} else {
