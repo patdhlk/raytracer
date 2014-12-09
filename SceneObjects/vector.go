@@ -1,4 +1,4 @@
-//the package for the scene objects: vector, ray, plane and sphere
+//Package objects implements the scene objects: vector, ray, plane and sphere
 //vector = Vektor
 //ray = Lichtstrahl
 //plane = Ebene
@@ -20,7 +20,8 @@ func (this *Vector) Length() float64 {
 	return math.Sqrt(this.X()*this.X() + this.Y()*this.Y() + this.Z()*this.Z())
 }
 
-func LimitFloat64(value, min, max float64) float64 {
+//just a helper function for the limit func
+func helper(value, min, max float64) float64 {
 	if value > max {
 		return max
 	}
@@ -32,9 +33,9 @@ func LimitFloat64(value, min, max float64) float64 {
 
 //limit of a vector
 func (this *Vector) Limit(min float64, max float64) *Vector {
-	tx := LimitFloat64(this.X(), min, max)
-	ty := LimitFloat64(this.Y(), min, max)
-	tz := LimitFloat64(this.Z(), min, max)
+	tx := helper(this.X(), min, max)
+	ty := helper(this.Y(), min, max)
+	tz := helper(this.Z(), min, max)
 
 	return NewVector(tx, ty, tz)
 }
