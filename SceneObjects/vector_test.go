@@ -50,6 +50,14 @@ func TestFindClosest(t *testing.T) {
 	if *res != *v2 {
 		t.Errorf("TestFindClosest %v %v", v2, res)
 	}
+
+	v2 = NewVector(2.0, 0.5, -1.1)
+	v1 = NewVector(2.0, 0.5, -0.9)
+
+	res = v.FindClosest(v1, v2)
+	if *res != *v1 {
+		t.Errorf("TestFindClosest %v %v", v1, res)
+	}
 }
 
 func TestMax(t *testing.T) {

@@ -72,4 +72,12 @@ func TestSphereIntersection(t *testing.T) {
 	if pos != nil {
 		t.Errorf("TestSphereIntersection 5 %v", pos)
 	}
+
+	s = NewSphere(NewVector(0.0, 0.0, 0.0), 0.1)
+	r = NewRay(NewVector(10.0, 10.0, 10.0), NewVector(10.0, 10.0, 10.0))
+	pos = s.Intersection(r)
+
+	if pos != nil {
+		t.Errorf("TestSphereIntersection 6 %v", pos)
+	}
 }
