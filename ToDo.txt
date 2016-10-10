@@ -1,7 +1,0 @@
-- Replace Eye --> Camera fixed	
-- Shadowing fixed
-- Phong fixed
-- Bug fixing: Plane fixed
-
-## new
-- testfunctions
